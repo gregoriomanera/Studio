@@ -112,5 +112,9 @@ La risposta utile è quella di mezzo: specifica, procedurale, consapevole dei li
 
 ---
 
+*Questo articolo è redatto a scopo informativo e non costituisce consulenza professionale. Prima di adottare qualsiasi decisione, è consigliabile confrontarsi con il proprio professionista di fiducia. Il Dott. Gregorio Manèra è disponibile per richieste di chiarimento e approfondimento.*
+
+*Contenuto redatto con il supporto di strumenti di intelligenza artificiale per le fasi di ricerca e sintesi documentale. Analisi, valutazioni e posizioni espresse sono dell'autore, che ne assume la piena responsabilità professionale ai sensi della L. 132/2025.*
+
 **Gregorio Manèra**
 Dottore Commercialista · Revisore Legale · Docente di Economia, Diritto e Amministrazione Aziendale
