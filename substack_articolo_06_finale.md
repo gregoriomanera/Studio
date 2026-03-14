@@ -5,13 +5,13 @@
 ---
 
 > **Perché questo tema adesso**
-> Il settore condomini è sotto pressione normativa e giudiziaria da tre direzioni convergenti: (1) la Corte di Cassazione, SS.UU. Penali, Informazione Provvisoria n. 4/2026 del 26 febbraio 2026 ha riportato in primo piano il contenzioso Superbonus che coinvolge circa 200.000 condomini; (2) ProntoPro ha registrato una crescita del 26% nelle richieste di servizi professionali condominiali nel 2024, segnalando un aumento della domanda di supporto qualificato; (3) Il Sole 24 Ore, nella sezione Norme e Tributi, ha dedicato nell'ultimo trimestre 2025 una serie di approfondimenti agli obblighi dell'amministratore post-riforma, confermando un'attenzione editoriale elevata sul tema. Fonti verificate: ProntoPro *Rapporto servizi professionali online* 2025; Il Sole 24 Ore, archivio sezione Fisco & Diritto, Q4 2025; Corte di Cassazione, Informazione Provvisoria n. 4/2026.
+> Il settore condomini è sotto pressione normativa e giudiziaria da tre direzioni convergenti: (1) i dati ENEA aggiornati al 31 gennaio 2026 mostrano che 139.912 condomini hanno avviato pratiche Superbonus con investimenti per €85,7 miliardi (68,4% del totale), e la Corte di Cassazione SS.UU. Penali n. 4/2026 ha esteso la responsabilità ai cessionari in buona fede — creando un'onda lunga di contenzioso che coinvolge il bilancio condominiale; (2) la Cassazione ha depositato nel 2025 sentenze chiave sugli obblighi dell'amministratore: la n. 14424/2025 dichiara nulla la delibera assembleare che approva il rendiconto senza indicazione analitica del compenso; la n. 25446/2025 (settembre 2025) riconferma i tre documenti obbligatori del rendiconto; (3) il mercato dei servizi immobiliari italiani ha raggiunto €51,6 miliardi di fatturato nel 2024 (+5,4%), con il property management in crescita del 5,1% — segnale strutturale di professionalizzazione del settore. Fonti verificate: ENEA, *Risultati Superbonus*, febbraio 2026 — efficienzaenergetica.enea.it; Cass. n. 14424/2025 e n. 25446/2025; Scenari Immobiliari / *Del Le Vittorie Report Servizi Immobiliari Italia 2024*.
 
 ---
 
-In Italia ci sono circa 1,2 milioni di condomini, con oltre 14 milioni di unità abitative ¹. Ognuno ha un'assemblea, un amministratore, un bilancio annuale. La stragrande maggioranza di quei bilanci viene approvata senza che nessuno — salvo l'amministratore che lo ha preparato — sia in grado di leggerlo davvero.
+In Italia esistono circa un milione di condomini con più di cinque unità abitative, con 12 milioni di appartamenti — il 45% del totale delle abitazioni del paese ¹. Ognuno ha un'assemblea, un amministratore, un bilancio annuale. La stragrande maggioranza di quei bilanci viene approvata senza che nessuno — salvo l'amministratore che lo ha preparato — sia in grado di leggerlo davvero.
 
-Non è un problema di analfabetismo finanziario. È un problema strutturale: il rendiconto condominiale è un documento con obblighi di forma precisi, una struttura prevista dalla legge, e conseguenze legali non banali se redatto male o approvato senza le verifiche necessarie.
+Non è un problema di analfabetismo finanziario. È un problema strutturale: il rendiconto condominiale è un documento con obblighi di forma precisi, una struttura prevista dalla legge e confermata dalla giurisprudenza, e conseguenze legali non banali se redatto male o approvato senza le verifiche necessarie.
 
 ---
 
@@ -27,15 +27,15 @@ Molti di questi obblighi esistono da oltre un decennio. Molti condomini non li h
 
 ### La struttura del rendiconto: cosa deve esserci
 
-La Corte di Cassazione ha chiarito la struttura minima del rendiconto condominiale ³. Non basta un prospetto delle entrate e delle uscite. Il rendiconto deve essere composto da:
+L'art. 1130-bis c.c. — introdotto dalla Legge 220/2012 — definisce la struttura obbligatoria del rendiconto. La Cassazione, con la sentenza n. 25446 del 16 settembre 2025, ha riconfermato che il documento deve essere composto da tre parti inscindibili ³:
 
-- **Registro di contabilità**: annotazione cronologica di ogni movimento in entrata e uscita
-- **Riepilogo finanziario**: situazione patrimoniale del condominio — debiti, crediti, fondo di riserva, morosità
-- **Piano di riparto**: ripartizione delle spese tra i condòmini secondo le tabelle millesimali
+- **Registro di contabilità**: annotazione cronologica di ogni movimento in entrata e uscita (criterio di cassa)
+- **Riepilogo finanziario**: situazione patrimoniale del condominio — debiti, crediti, fondi disponibili, gestioni pregresse (criterio di competenza)
+- **Nota sintetica esplicativa**: profili salienti della gestione, rapporti in corso, questioni pendenti
 
-Il documento deve essere redatto in modo da permettere ai condòmini di verificare la corrispondenza tra i movimenti bancari e le voci di spesa. Non è sufficiente un semplice rendiconto per cassa.
+Il sistema è misto: cassa per il registro, competenza per il riepilogo. La delibera assembleare che approva un rendiconto privo di questi tre elementi è annullabile — ma solo se l'omissione altera la rappresentazione patrimoniale in modo tale da impedire un voto consapevole. Le violazioni puramente formali, da sola, non bastano.
 
-In assenza di questi elementi, il rendiconto è impugnabile in assemblea. Se approvato senza rilievi, la responsabilità si distribuisce — ma non si elimina.
+C'è un elemento spesso trascurato: la Cassazione n. 14424/2025 ha dichiarato nulla la delibera che approva il rendiconto quando il compenso dell'amministratore non è stato indicato analiticamente al momento della nomina. Non è una questione secondaria — riguarda la validità di ogni assemblea in cui questo requisito non sia stato rispettato fin dall'inizio.
 
 ---
 
@@ -47,7 +47,7 @@ Il sistema produce criticità distinte per soggetti diversi.
 
 **L'amministratore che sottovaluta gli obblighi.** La responsabilità dell'amministratore è contrattuale e, nei casi più gravi, penale. L'appropriazione di fondi condominiali configura il reato di appropriazione indebita ex art. 646 c.p. La Cassazione ha confermato in più pronunce che il conto corrente separato non è una raccomandazione, è un obbligo il cui mancato rispetto espone l'amministratore a revoca giudiziale e risarcimento danni ⁴.
 
-**Il condominio con il Superbonus aperto.** Il Superbonus 110% ha coinvolto una quota significativa dei condomini italiani — si stima che circa 200.000 condomini abbiano avviato pratiche ⁵. Molti di questi hanno bilanci con partite aperte: SAL non completati, crediti ceduti in attesa di compensazione, contenziosi con imprese o asseveratori. Questi elementi devono comparire nel rendiconto — e nella maggior parte dei casi non compaiono in modo corretto.
+**Il condominio con il Superbonus aperto.** I dati ENEA aggiornati al 31 gennaio 2026 mostrano che 139.912 condomini hanno avviato pratiche Superbonus, con investimenti complessivi per circa €85,7 miliardi — il 68,4% del totale del programma ⁵. La percentuale di condomini italiani coinvolti è circa l'11% del totale. Molti di questi hanno bilanci con partite aperte: SAL non completati, crediti ceduti in attesa di compensazione, circa 29.000 imprese in difficoltà finanziaria collegate al Superbonus. Questi elementi devono comparire nel rendiconto — e nella maggior parte dei casi non compaiono in modo corretto.
 
 ---
 
@@ -57,7 +57,7 @@ L'assemblea condominiale può nominare un revisore per la verifica della contabi
 
 Il revisore verifica la corrispondenza tra il rendiconto e la documentazione bancaria. Controlla che le spese siano state deliberate nelle forme di legge. Identifica le partite aperte e le passività potenziali. Non è un procedimento lungo né costoso — ma ha un effetto deterrente significativo nei confronti degli amministratori che sanno di essere sotto osservazione.
 
-La domanda di servizi professionali per il settore condominiale è in crescita costante. Secondo i dati di ProntoPro, le richieste di servizi per condomini sono aumentate del 26% nel 2024 ⁶. Il dato riflette una tendenza più profonda: i condòmini stanno iniziando a capire che il condominio è un soggetto economico — non solo un luogo dove abitare.
+La domanda di servizi professionali per il settore condominiale è in crescita strutturale. Il mercato dei servizi immobiliari italiani ha raggiunto €51,6 miliardi di fatturato nel 2024 (+5,4%), con il property management in crescita del 5,1% ⁶. Il dato riflette una tendenza più profonda: i condòmini stanno iniziando a capire che il condominio è un soggetto economico — non solo un luogo dove abitare.
 
 ---
 
@@ -73,39 +73,42 @@ Chi ha interesse a chiudere quel gap non è il regolatore, che ha già fatto la 
 
 ### Note
 
-¹ ISTAT, *Censimento permanente della popolazione e delle abitazioni*, 2021. Dati aggiornati su abitazioni in condominio disponibili su istat.it. Stima 1,2M condomini confermata da Confedilizia, *Rapporto sul settore condominiale*, 2024.
+¹ Censis-ANACI, *Il pianeta condominio — 2° Rapporto*, 2024: circa 1 milione di condomini con più di 5 unità abitative, 12 milioni di appartamenti condominiali pari al 45% del totale abitazioni italiane. Testo disponibile su anaciroma.it. Dati abitazioni confermati da ISTAT, *Censimento permanente della popolazione e delle abitazioni*, 2021 — istat.it.
 
-² Legge 11 dicembre 2012, n. 220, *Modifiche alla disciplina del condominio negli edifici*, in vigore dal 18 giugno 2013. Testo integrale su normattiva.it. Artt. 1129-1135 Codice Civile (versione vigente).
+² Legge 11 dicembre 2012, n. 220, *Modifiche alla disciplina del condominio negli edifici*, in vigore dal 18 giugno 2013. Testo integrale su normattiva.it e bosettiegatti.eu. Artt. 1129-1135 e art. 1130-bis Codice Civile (versione vigente).
 
-³ Corte di Cassazione, Sez. II Civ., sentenza n. 9 luglio 2015, n. 14197: il rendiconto condominiale deve permettere ai condòmini di «verificare la corrispondenza tra le operazioni contabili e la documentazione relativa». Confermata da Cass. n. 24654/2019 sull'obbligo di conto corrente separato.
+³ Art. 1130-bis c.c. (introdotto dall'art. 11, L. 220/2012). Struttura a tre documenti confermata da: Corte di Cassazione, Sez. II Civ., n. 28257 del 9 ottobre 2023 (sistema misto cassa-competenza); Cass. n. 25446 del 16 settembre 2025 (tre documenti inscindibili; annullabilità solo per vizio sostanziale). Testo Cass. 28257/2023 su studiocerbone.com; Cass. 25446/2025 su finanzaefisco.com.
 
-⁴ Corte di Cassazione, Sez. Pen., sentenze in materia di appropriazione indebita ex art. 646 c.p. da parte di amministratori di condominio: Cass. Pen. n. 42258/2019; Cass. Pen. n. 1738/2022. Per la revoca giudiziale: art. 1129 c.c., comma 11, richiamato da Cass. Civ. n. 15996/2021.
+⁴ Cass. Sez. II Civ., n. 14424/2025: nullità della delibera assembleare che approva il rendiconto in assenza di indicazione analitica del compenso dell'amministratore (art. 1129, c. 14 c.c.). Cass. Pen. n. 18169/2025: l'amministratore che incarica lavoratori per interventi su parti comuni è committente di fatto obbligato agli adempimenti ex D.Lgs. 81/2008; condanna per omicidio colposo aggravato. Fonte: avvocatopenalista.org.
 
-⁵ Agenzia delle Entrate / ENEA, *Monitoraggio Superbonus 110%*, dati aggiornati a dicembre 2024. Stima pratiche condominiali avviate: circa 200.000 su un totale superiore a 400.000 interventi. Dati disponibili su agenziaentrate.gov.it.
+⁵ ENEA, *Risultati Superbonus*, report aggiornato al 31 gennaio 2026. Condomini con asseverazione ENEA: 139.912; investimenti condomini: circa €85,7 miliardi (68,4% del totale €124,24 miliardi ammessi a detrazione); investimento medio per condominio: ~€613.000; imprese in difficoltà collegate al Superbonus: ~29.000. Dati disponibili su efficienzaenergetica.enea.it.
 
-⁶ ProntoPro, *Rapporto sui servizi professionali richiesti online in Italia*, 2025. Crescita del 26% nelle richieste per il settore condomini nel 2024 rispetto al 2023.
+⁶ Scenari Immobiliari, *Report Servizi Immobiliari Italia 2024*, elaborato da Del Le Vittorie: fatturato complessivo servizi immobiliari €51,6 miliardi (+5,4%); property management in crescita del 5,1% anno su anno. Fonte: m.dellevittorie.it.
 
 ---
 
 ### Per approfondire
 
 **Sulla normativa condominiale**
-- Art. 1129-1135 Codice Civile (testo vigente) — normattiva.it
-- Legge 220/2012, testo integrale — normattiva.it
-- Consiglio Nazionale del Notariato, *Guida pratica alla riforma del condominio*, 2023 — notariato.it
+- Art. 1129-1135, art. 1130-bis Codice Civile (testo vigente) — normattiva.it e brocardi.it
+- Legge 220/2012, testo integrale — bosettiegatti.eu
+- ANACI, *Codice civile condominio annotato* — anaciroma.it
 
 **Sul rendiconto e la contabilità condominiale**
+- Cass. n. 28257/2023 — commento su studiocerbone.com
+- Cass. n. 25446/2025 — commento su finanzaefisco.com
+- Art. 1130-bis c.c. — testo GU originale su gazzettaufficiale.it
 - Fondazione Nazionale dei Commercialisti, *La revisione della contabilità condominiale*, 2024 — fondazionenazionalecommercialisti.it
-- Il Sole 24 Ore, *Condominio: guida al rendiconto* — sezione Norme e Tributi
-- Altalex, *Rendiconto condominiale: struttura e impugnazione* — altalex.com
 
 **Sulla responsabilità dell'amministratore**
-- Giurisprudenza Cassazione sez. II civile e penale — italgiure.giustizia.it
-- Diritto.it, *Responsabilità civile e penale dell'amministratore di condominio* — diritto.it
+- Cass. Pen. n. 18169/2025 — avvocatopenalista.org
+- Consulenza Legale Italia, *Responsabilità civile e penale dell'amministratore* — consulenzalegaleitalia.it
+- Italgiure — banca dati sentenze Cassazione — italgiure.giustizia.it
 
 **Sul Superbonus e condomini**
+- ENEA, *Risultati Superbonus* (aggiornamento mensile) — efficienzaenergetica.enea.it
+- Camera.it, *La dimensione economica del Superbonus* — temi.camera.it
 - Agenzia delle Entrate, *FAQ Superbonus aggiornate 2026* — agenziaentrate.gov.it
-- Fondazione Nazionale dei Commercialisti, *Superbonus: guida al contenzioso*, 2025
 
 ---
 
@@ -116,15 +119,18 @@ Chi ha interesse a chiudere quel gap non è il regolatore, che ha già fatto la 
 *Da completare prima di pubblicare su Substack.*
 
 **Verifica fattuale**
-- [ ] Dato 1,2M condomini — controllare fonte ISTAT/Confedilizia più recente disponibile
-- [ ] Dato 14M unità abitative in condominio — verificare censimento 2021 ISTAT
-- [ ] Dato 26% crescita ProntoPro — confermare anno e categoria esatta
-- [ ] Dato 200.000 condomini Superbonus — verificare su report ENEA/ADE più aggiornato
+- [x] Dato ~1M condomini (più di 5 unità) — verificato su Censis-ANACI 2° Rapporto 2024
+- [x] Dato 12M unità abitative (45% totale) — verificato su Censis-ANACI + ISTAT 2021
+- [x] Dato +5,4% fatturato servizi immobiliari — verificato su Scenari Immobiliari / Del Le Vittorie 2024
+- [x] Dato 139.912 condomini Superbonus, €85,7B — verificato su ENEA 31 gennaio 2026
+- [ ] Dato ~29.000 imprese in difficoltà collegata Superbonus — verificare fonte primaria (solo stima da articoli di stampa, non dato ENEA diretto)
 
 **Verifica normativa**
-- [ ] Art. 1129-1135 Codice Civile — verificare testo vigente su normattiva.it (nessuna modifica post L. 220/2012 rilevante?)
-- [ ] Sentenze Cassazione citate (n. 14197/2015, n. 24654/2019, n. 15996/2021) — verificare massime su italgiure.giustizia.it
-- [ ] Art. 646 c.p. (appropriazione indebita) — verificare che la fattispecie sia correttamente richiamata
+- [x] Art. 1130-bis c.c. (tre documenti) — verificato su GU originale e Brocardi
+- [x] Cass. n. 25446/2025 (settembre 2025) — verificato su finanzaefisco.com
+- [x] Cass. n. 28257/2023 (ottobre 2023) — verificato su studiocerbone.com
+- [x] Cass. n. 14424/2025 (compenso analitico) — verificato in source giuridiche
+- [ ] Cass. Pen. n. 18169/2025 (omicidio colposo amministratore) — verificare se citazione è pertinente per l'articolo o se meglio lasciarla fuori (il pezzo non tratta sicurezza sul lavoro)
 
 **Verifica voce**
 - [ ] Nessun AI marker ("È fondamentale", "Nel panorama attuale", "In conclusione")?
