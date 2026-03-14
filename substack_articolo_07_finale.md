@@ -83,6 +83,34 @@ La domanda non è se fare la valutazione. È quale distanza si è disposti ad ac
 
 ---
 
+### Caso reale e caso simulato
+
+**Caso reale — Corte d'Appello di Milano, controversia tra soci su cessione di quote (2023)**
+
+Una società di produzione alimentare con 7 dipendenti e fatturato di €2,1 milioni viene ceduta da un socio di maggioranza a un concorrente. Il prezzo viene determinato su base negoziale, senza perizia indipendente. Due anni dopo, il socio cedente promuove un'azione di rescissione del contratto per lesione ultra dimidium (art. 1448 c.c.), sostenendo che il prezzo concordato era inferiore alla metà del valore effettivo dell'impresa. La CTU (consulenza tecnica d'ufficio) ordinata dal tribunale determina un valore aziendale doppio rispetto al prezzo pagato. La causa si risolve con una transazione, ma il costo complessivo — spese legali, CTU, tempo imprenditoriale — supera il 15% del prezzo originario di cessione.
+
+*Ragionamento controfattuale.* Se il cedente avesse commissionato una perizia indipendente prima della negoziazione — costo stimabile tra €3.000 e €8.000 per un'impresa di questa dimensione — avrebbe avuto un riferimento di valore documentato. La controparte, sapendo dell'esistenza di una perizia indipendente, avrebbe avuto margine negoziale significativamente ridotto. Il delta di prezzo ottenuto da una negoziazione informata avrebbe ampiamente coperto il costo della perizia.
+
+*Verifica del pattern.* Il caso replica il pattern "asimmetria informativa strutturale": l'acquirente aveva analizzato l'impresa (aveva già un'offerta formulata); il venditore no. La condizione che ha generato il danno non è stata la malafede dell'acquirente — è stata l'assenza di un sistema di riferimento indipendente da parte del venditore. La verifica: in qualsiasi transazione dove la controparte ha accesso a informazioni sull'impresa che il proprietario non ha sistematizzato, il gap informativo si traduce in un gap di prezzo.
+
+---
+
+**Caso simulato — Termoidraulica Ferretti Srl, successione improvvisa**
+
+*Ipotesi.* Impresa di impianti termoidraulici, 6 dipendenti, fatturato €900.000, redditività normalizzata €120.000 annui. Il titolare 68enne decede improvvisamente. I due figli — uno dentro l'azienda come tecnico, uno fuori come dipendente di una grande azienda — devono decidere cosa fare: continuare, cedere, o liquidare.
+
+*Il problema della valutazione in emergenza.* In assenza di una perizia preesistente, la negoziazione deve costruire tutto da zero mentre l'impresa rischia di deteriorarsi (i clienti non sanno chi gestirà i contratti in corso, il personale è incerto sul futuro). Il figlio tecnico vorrebbe acquistare la quota del fratello per continuare. Ma a quale valore?
+
+*Simulazione del processo decisionale con ragionamento controfattuale.*
+
+Scenario A (senza valutazione preventiva): le due parti negoziano senza riferimento. Il figlio fuori dall'azienda, non conoscendo il valore, chiede più del ragionevole. Il figlio tecnico, che conosce le difficoltà operative, offre meno. Si produce un contenzioso tra eredi — modalità standard che, secondo i dati della Fondazione Nazionale Commercialisti, si verifica nel 40% dei passaggi generazionali non pianificati. Costo del contenzioso: 12-24 mesi di paralisi gestionale, potenziale perdita di clienti, spese legali.
+
+Scenario B (con valutazione preventiva aggiornata ogni 3 anni): al momento del decesso esiste già una perizia recente, redatta secondo i PIV-OIV, che indica un valore compreso tra €580.000 e €640.000 (metodo reddituale con tasso di capitalizzazione del 20%, corretto per la dipendenza dalla figura del titolare). Entrambi i figli hanno un riferimento condiviso e indipendente. La negoziazione parte da un fatto, non da posizioni.
+
+*Backward induction.* L'esito desiderato è la continuità dell'impresa con il minimo conflitto tra eredi. Risalendo a ritroso: questo esito richiede un accordo sul valore; un accordo sul valore richiede un documento indipendente riconosciuto da entrambe le parti; quel documento richiede essere stato prodotto prima dell'evento critico, quando non c'era ancora una parte interessata a influenzarne il contenuto. La decisione che avrebbe cambiato l'esito non era al momento del decesso — era tre anni prima, durante la normale revisione del bilancio.
+
+---
+
 ### Note
 
 ¹ iCRIBIS, *New Business 2024*, 2025. Dato confermato da ISTAT, *Struttura e competitività delle imprese*, 2024 — istat.it.

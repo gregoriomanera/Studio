@@ -71,6 +71,37 @@ Chi ha interesse a chiudere quel gap non è il regolatore, che ha già fatto la 
 
 ---
 
+### Caso reale e caso simulato
+
+**Caso reale — Cass. Sez. II Civ. n. 14424/2025**
+
+Un condominio in Lombardia ha nominato il proprio amministratore senza che il compenso fosse indicato analiticamente nell'atto di nomina. L'assemblea ha successivamente approvato il rendiconto annuale secondo la procedura ordinaria. Alcuni condòmini hanno impugnato la delibera di approvazione. La Cassazione ha confermato la nullità: la mancata indicazione analitica del compenso al momento della nomina inficia la validità di qualsiasi delibera collegata, inclusa l'approvazione del rendiconto.
+
+*Ragionamento controfattuale.* Se il compenso fosse stato indicato analiticamente alla nomina — come richiede l'art. 1129, c. 14 c.c. — la delibera sarebbe stata valida, e il costo del contenzioso (spese legali, assemblee straordinarie, potenziale rifacimento del rendiconto) non si sarebbe prodotto. Il punto critico non era il rendiconto in sé, ma un adempimento formale anteriore che nessun condòmino aveva verificato. La causa dell'invalidità era già presente alla firma del mandato, non all'assemblea di approvazione.
+
+*Verifica del pattern.* Il caso replica il pattern "errore a monte → invalidità a valle": il nodo critico non è dove emerge il problema, ma dove è stato generato. Condizione necessaria per l'invalidità: assenza di indicazione analitica del compenso. Condizione sufficiente: approvazione del rendiconto in quella situazione. La verifica è immediata: esiste il verbale di nomina con il compenso indicato analiticamente? Se la risposta è no, il rischio esiste indipendentemente dalla qualità del rendiconto.
+
+---
+
+**Caso simulato — Condominio Via delle Mimose, 28 unità, Superbonus completato**
+
+*Ipotesi.* Condominio edificato negli anni '70, 28 unità, Superbonus 110% completato nel 2023 con investimento totale di €640.000, cessione del credito a un istituto bancario. L'assemblea approva il rendiconto 2024 presentato dall'amministratore. Tra le voci: "spese straordinarie Superbonus — chiuse" senza ulteriori dettagli. I condòmini approvano all'unanimità.
+
+*Problema.* Il rendiconto non include: (a) la verifica che tutti i SAL siano stati regolarmente asseverati; (b) la situazione delle garanzie rilasciate dall'impresa appaltatrice, fallita nel 2024; (c) l'eventuale recupero di crediti da cessioni parzialmente contestate dall'Agenzia delle Entrate.
+
+*Simulazione del processo decisionale.* Prima dell'approvazione, un condòmino che applica backward induction parte dall'esito peggiore — accertamento ADE con recupero credito — e risale alla documentazione necessaria per escluderlo:
+
+1. Esistono gli atti di asseverazione completi per ogni SAL?
+2. Il credito ceduto è stato integralmente compensato dalla banca, senza riserve?
+3. L'impresa appaltatrice (ora fallita) ha rilasciato dichiarazioni di conformità?
+4. Il rendiconto riporta le partite aperte e le passività potenziali (art. 1130-bis, riepilogo finanziario)?
+
+Se anche una sola risposta è "non so", la delibera può essere approvata con riserva — richiedendo all'amministratore di integrare la documentazione entro 30 giorni e sottoporre il fascicolo a un revisore esterno prima della prossima assemblea.
+
+*Pre-mortem.* Ipotizzando che l'assemblea approvi il rendiconto senza questi controlli e che l'ADE notifichi un accertamento 18 mesi dopo: il condòmino che ha votato favorevolmente ha ratificato un documento che non rappresentava la reale situazione patrimoniale. La difesa — "non sapevamo" — è disponibile solo se può dimostrare che le informazioni non erano accessibili al momento del voto. Se l'amministratore aveva la documentazione e non l'ha inclusa nel rendiconto, la responsabilità è sua. Se non la aveva, il problema è a monte nell'esecuzione dei lavori.
+
+---
+
 ### Note
 
 ¹ Censis-ANACI, *Il pianeta condominio — 2° Rapporto*, 2024: circa 1 milione di condomini con più di 5 unità abitative, 12 milioni di appartamenti condominiali pari al 45% del totale abitazioni italiane. Testo disponibile su anaciroma.it. Dati abitazioni confermati da ISTAT, *Censimento permanente della popolazione e delle abitazioni*, 2021 — istat.it.

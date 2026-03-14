@@ -79,6 +79,38 @@ La differenza tra chi usa AI in modo affidabile e chi la usa in modo rischioso n
 
 ---
 
+### Caso reale e caso simulato
+
+**Caso reale — *Mata v. Avianca, Inc.*, SDNY, giugno 2023**
+
+Roberto Mata aveva intentato causa contro la compagnia aerea Avianca per un infortunio subito a bordo. Il suo legale, Steven Schwartz dello studio Levidow, Levidow & Oberman, ha utilizzato ChatGPT per identificare precedenti giurisprudenziali a supporto della domanda. L'atto depositato citava sei sentenze: *Varghese v. China Southern Airlines*, *Shaboon v. Egyptair*, *Petersen v. Iran Air*, e altre. Nessuna di esse esisteva. ChatGPT le aveva generate con coordinate formalmente plausibili — corte, anno, numero di causa — ma prive di qualsiasi corrispondenza nella realtà.
+
+Quando la controparte non riuscì a reperire le sentenze, il giudice Kevin Castel ordinò ai legali di produrre i testi originali. Impossibile. L'avvocato, interrogato, confermò di aver usato ChatGPT e di non aver verificato l'esistenza delle citazioni prima di depositarle. La sanzione fu di $5.000 ciascuno per i due legali responsabili, con obbligo di trasmettere l'ordinanza a tutti gli avvocati coinvolti nel caso.
+
+*Ragionamento controfattuale.* La verifica di esistenza di una sentenza richiede meno di due minuti: basta una ricerca su Google Scholar, CourtListener, o il sito del tribunale. Se Schwartz avesse eseguito questa verifica elementare su ognuna delle sei citazioni, l'errore sarebbe stato rilevato prima del deposito. Il costo della verifica: dieci minuti. Il costo del mancato controllo: sanzione pecuniaria, danno reputazionale, copertura internazionale del caso.
+
+*Verifica del pattern.* Il caso non è anomalo — è il caso-scuola di un pattern sistematico. La condizione necessaria: uso di un modello linguistico per produrre contenuti che vengono poi presentati come verificati. La condizione sufficiente: assenza di un processo di verifica indipendente prima dell'uso. Il pattern si replica ogni volta che l'output dell'AI viene trattato come fatto piuttosto che come ipotesi da verificare. La domanda di controllo è sempre la stessa: *questa affermazione può essere falsificata consultando una fonte primaria?* Se la risposta è sì, la verifica è obbligatoria prima di qualsiasi uso professionale.
+
+---
+
+**Caso simulato — Studio tributario, risposta a contestazione ADE su redditi esteri**
+
+*Ipotesi.* Un commercialista utilizza un assistente AI per preparare una memoria difensiva in risposta a una contestazione dell'Agenzia delle Entrate. Il cliente è un lavoratore autonomo che ha operato per tre anni in Germania mantenendo la residenza fiscale in Italia. La questione è la corretta applicazione della Convenzione contro la doppia imposizione Italia-Germania (firmata nel 1989, modificata nel 2009).
+
+*L'errore.* Il modello AI genera una risposta tecnicamente strutturata, che cita correttamente la convenzione ma applica l'interpretazione prevalente antecedente alla circolare dell'Agenzia delle Entrate n. 28/E/2019, che ha modificato il criterio di collegamento per i redditi da lavoro autonomo transfrontaliero. La risposta è formalmente plausibile — la convenzione esiste, l'articolo citato è corretto — ma l'interpretazione è quella superata, non quella applicata dall'ADE al momento della contestazione.
+
+*Simulazione del processo decisionale.*
+
+Il professionista che non conosce la circolare 28/E/2019 consegnerà la memoria al cliente senza rilevare l'errore. Il cliente, che non ha il sistema di riferimento per valutarla, la firmerà. L'ADE, che conosce la propria circolare del 2019, rileverà che la difesa si basa su un'interpretazione che ha già esplicitamente superato. La contestazione verrà confermata.
+
+*Ragionamento controfattuale.* Se il professionista avesse utilizzato l'AI per produrre una prima bozza — e poi avesse dedicato 20 minuti a verificare la giurisprudenza ADE più recente sul tema specifico — avrebbe trovato la circolare 28/E/2019 e corretto l'argomentazione. L'AI aveva identificato correttamente il perimetro del problema (convenzione, articolo, criterio di collegamento); aveva sbagliato nel rilevare l'aggiornamento interpretativo. La funzione dell'AI era appropriata; mancava il passaggio di verifica dell'aggiornamento normativo.
+
+*Controllo di falsificabilità.* L'interpretazione AI è falsificabile? Sì: basta cercare le circolari ADE sulla convenzione Italia-Germania emesse dopo il 2015. Se ne esiste una che modifica l'interpretazione citata, l'argomento cade. Questa verifica avrebbe richiesto 5 minuti. Il costo del mancato controllo: memoria difensiva inefficace, eventuale ricorso in commissione tributaria, costo di una seconda procedura.
+
+*Implicazione per il processo di controllo.* L'AI è più utile nei contesti dove l'errore è rilevabile dalla struttura (logica, coerenza, completezza) e meno affidabile dove l'errore riguarda l'aggiornamento interpretativo più recente — che per definizione è sottorappresentato nel corpus di addestramento. Il presidio professionale si concentra esattamente su quel punto: non controllare ciò che l'AI fa bene, ma verificare sistematicamente ciò che l'AI non può sapere.
+
+---
+
 ### Per approfondire
 
 **Sul rischio di errore nei sistemi AI in contesti professionali**
