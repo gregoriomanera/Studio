@@ -131,6 +131,15 @@ Il professionista che non conosce la circolare 28/E/2019 consegnerà la memoria 
 
 ---
 
+*Questo articolo è redatto a scopo informativo e non costituisce consulenza professionale. Prima di adottare qualsiasi decisione, è consigliabile confrontarsi con il proprio professionista di fiducia.*
+
+*Chi desidera approfondire la rilevanza di quanto trattato rispetto alla propria situazione specifica può rivolgersi al Dott. Gregorio Manèra per una valutazione professionale nelle aree della consulenza fiscale, societaria e patrimoniale, nonché della revisione legale dei conti. Il Dott. Manèra è disponibile a fornire ogni chiarimento in merito ai temi trattati e al supporto che può offrire nell'ambito della propria attività professionale.*
+
+*Contenuto redatto con il supporto di strumenti di intelligenza artificiale per le fasi di ricerca e sintesi documentale. Analisi, valutazioni e posizioni espresse sono dell'autore, che ne assume la piena responsabilità professionale ai sensi della L. 132/2025.*
+
+**Gregorio Manèra**
+Dottore Commercialista · Revisore Legale · Docente di Economia, Diritto e Amministrazione Aziendale
+
 ---
 
 ### Checklist di revisione pre-pubblicazione
@@ -167,12 +176,3 @@ Il professionista che non conosce la circolare 28/E/2019 consegnerà la memoria 
 - [ ] Un lettore che usa ChatGPT per questioni fiscali si riconoscerà nel pattern descritto?
 
 ---
-
-*Questo articolo è redatto a scopo informativo e non costituisce consulenza professionale. Prima di adottare qualsiasi decisione, è consigliabile confrontarsi con il proprio professionista di fiducia.*
-
-*Chi desidera approfondire la rilevanza di quanto trattato rispetto alla propria situazione specifica può rivolgersi al Dott. Gregorio Manèra per una valutazione professionale nelle aree della consulenza fiscale, societaria e patrimoniale, nonché della revisione legale dei conti. Il Dott. Manèra è disponibile a fornire ogni chiarimento in merito ai temi trattati e al supporto che può offrire nell'ambito della propria attività professionale.*
-
-*Contenuto redatto con il supporto di strumenti di intelligenza artificiale per le fasi di ricerca e sintesi documentale. Analisi, valutazioni e posizioni espresse sono dell'autore, che ne assume la piena responsabilità professionale ai sensi della L. 132/2025.*
-
-**Gregorio Manèra**
-Dottore Commercialista · Revisore Legale · Docente di Economia, Diritto e Amministrazione Aziendale
