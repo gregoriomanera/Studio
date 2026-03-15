@@ -5,7 +5,7 @@
 ---
 
 > **Perché questo tema adesso**
-> Il tema è entrato nella fase di maturità regolamentare con tre segnali distinti: (1) la Legge 132/2025 (in vigore dal 10 ottobre 2025) ha reso obbligatoria in Italia la disclosure dell'uso di AI nei servizi professionali, segnalando che il legislatore ha già classificato il problema come rilevante; (2) l'EU AI Act (Reg. UE 2024/1689) entra in piena applicazione il 2 agosto 2026 — meno di 5 mesi — con obblighi specifici per i sistemi AI in professioni regolamentate; (3) il Pew Research Center (*Americans and Artificial Intelligence*, 2025) documenta che il 30% dei millennial usa AI generativa al lavoro, la quota più alta tra tutte le generazioni, con un'accelerazione nelle decisioni finanziarie e legali. Il caso *Mata v. Avianca* (SDNY, giugno 2023) rimane il riferimento giurisprudenziale internazionale sul tema. Fonti verificate: L. 132/2025 — normattiva.it; Reg. UE 2024/1689 — eur-lex.europa.eu; Pew Research Center, *How Americans Use AI at Work*, 2025; CourtListener — *Mata v. Avianca, Inc.*, No. 22-cv-1461.
+> Il tema è entrato nella fase di maturità regolamentare con tre segnali distinti: (1) la Legge 132/2025 (in vigore dal 10 ottobre 2025) ha reso obbligatoria in Italia la disclosure dell'uso di AI nei servizi professionali, segnalando che il legislatore ha già classificato il problema come rilevante; (2) l'EU AI Act (Reg. UE 2024/1689) entra in piena applicazione il 2 agosto 2026 — meno di 5 mesi — con obblighi specifici per i sistemi AI in professioni regolamentate; (3) il Pew Research Center (*Americans and Artificial Intelligence*, 2025) documenta che il 30% degli adulti nella fascia 28–43 anni usa AI generativa al lavoro, la quota più alta tra le generazioni attive, con un'accelerazione nelle decisioni finanziarie e legali. Il caso *Mata v. Avianca* (SDNY, giugno 2023) rimane il riferimento giurisprudenziale internazionale sul tema. Fonti verificate: L. 132/2025 — normattiva.it; Reg. UE 2024/1689 — eur-lex.europa.eu; Pew Research Center, *How Americans Use AI at Work*, 2025; CourtListener — *Mata v. Avianca, Inc.*, No. 22-cv-1461.
 
 ---
 
@@ -55,7 +55,7 @@ Il quadro normativo non sta dicendo "non usate AI". Sta dicendo "se usate AI, sa
 
 ### La domanda che il mercato non ha ancora risolto
 
-Il 57% dei millennial italiani dichiara di usare o di intendere usare AI per decisioni finanziarie e aziendali ⁵ — un dato da leggere con cautela perché mescola comportamento attuale e intenzione futura, e proviene da un sondaggio commissionato da operatori con interesse commerciale nell'adozione AI. L'ordine di grandezza rimane significativo. Una quota crescente — non quantificata con precisione, ma rilevabile aneddoticamente — si affida a modelli linguistici generali per questioni fiscali, contrattuali, successorie.
+Il 57% degli italiani nella fascia d'età 28–43 anni dichiara di usare o di intendere usare AI per decisioni finanziarie e aziendali ⁵ — un dato da leggere con cautela perché mescola comportamento attuale e intenzione futura, e proviene da un sondaggio commissionato da operatori con interesse commerciale nell'adozione AI. L'ordine di grandezza rimane significativo. Una quota crescente — non quantificata con precisione, ma rilevabile aneddoticamente — si affida a modelli linguistici generali per questioni fiscali, contrattuali, successorie.
 
 Il pattern che si produce è prevedibile: l'AI dà una risposta plausibile, la persona prende una decisione basata su quella risposta, la decisione è sbagliata, l'errore emerge mesi o anni dopo — in un accertamento, in un contenzioso, in una cessione andata male.
 
@@ -86,6 +86,8 @@ La differenza tra chi usa AI in modo affidabile e chi la usa in modo rischioso n
 Roberto Mata aveva intentato causa contro la compagnia aerea Avianca per un infortunio subito a bordo. Il suo legale, Steven Schwartz dello studio Levidow, Levidow & Oberman, ha utilizzato ChatGPT per identificare precedenti giurisprudenziali a supporto della domanda. L'atto depositato citava sei sentenze: *Varghese v. China Southern Airlines*, *Shaboon v. Egyptair*, *Petersen v. Iran Air*, e altre. Nessuna di esse esisteva. ChatGPT le aveva generate con coordinate formalmente plausibili — corte, anno, numero di causa — ma prive di qualsiasi corrispondenza nella realtà.
 
 Quando la controparte non riuscì a reperire le sentenze, il giudice Kevin Castel ordinò ai legali di produrre i testi originali. Impossibile. L'avvocato, interrogato, confermò di aver usato ChatGPT e di non aver verificato l'esistenza delle citazioni prima di depositarle. La sanzione fu di $5.000 ciascuno per i due legali responsabili, con obbligo di trasmettere l'ordinanza a tutti gli avvocati coinvolti nel caso.
+
+*Metodo epistemologico applicato: Falsificazionismo applicato — Principio di Popper (motivazione).* Il caso reale adotta il falsificazionismo come metodo primario di analisi professionale perché il nucleo del problema non è di causalità storica ("cosa avrebbe prodotto un comportamento diverso?") ma di epistemologia operativa: con quale procedura si deve trattare l'output AI prima di farne uso professionale? La risposta popperiana è strutturalmente diversa dalla risposta controfattuale: ogni affermazione prodotta da un sistema AI in un contesto ad alto rischio è una *ipotesi da falsificare*, non una risposta da confermare. Questo orienta l'azione professionale in modo asimmetrico: non "cerca elementi che supportano la risposta AI" (bias di conferma), ma "cerca una sola prova contraria che la abbatta" (falsification test). Nel caso specifico, la domanda corretta non era "queste sentenze sembrano plausibili?" ma "queste sentenze esistono in una fonte primaria verificabile?" — domanda binaria, falsificabile in due minuti su CourtListener, con potere diagnostico immediato. Il falsificazionismo è preferibile al solo controfattuale come metodo ex ante perché fornisce un protocollo operativo applicabile sistematicamente prima dell'uso; il ragionamento controfattuale che segue quantifica il costo del mancato controllo ex post, funzione complementare e non sostitutiva.
 
 *Ragionamento controfattuale.* La verifica di esistenza di una sentenza richiede meno di due minuti: basta una ricerca su Google Scholar, CourtListener, o il sito del tribunale. Se Schwartz avesse eseguito questa verifica elementare su ognuna delle sei citazioni, l'errore sarebbe stato rilevato prima del deposito. Il costo della verifica: dieci minuti. Il costo del mancato controllo: sanzione pecuniaria, danno reputazionale, copertura internazionale del caso.
 
@@ -267,8 +269,8 @@ Argomentazione solida ancorata a un case study primario di alta qualità (Mata) 
 **Verifica fattuale**
 - [ ] Caso *Mata v. Avianca*: verificare che la data e i nomi degli avvocati siano corretti, e che l'ordinanza sia accessibile su CourtListener
 - [ ] Ji et al. 2023: verificare titolo esatto e DOI su dl.acm.org
-- [ ] Dato 57% millennial italiani: verificare fonte We Wealth/eToro — è ancora l'indagine più recente disponibile?
-- [ ] Dato 30% millennial Pew: verificare edizione 2025 del report
+- [ ] Dato 57% fascia 28–43 anni italiani: verificare fonte We Wealth/eToro — è ancora l'indagine più recente disponibile?
+- [ ] Dato 30% fascia 28–43 anni (Pew): verificare edizione 2025 del report
 
 **Verifica normativa**
 - [ ] L. 132/2025, art. 14, c. 1 — verificare testo vigente e data di entrata in vigore (10 ottobre 2025) su normattiva.it
