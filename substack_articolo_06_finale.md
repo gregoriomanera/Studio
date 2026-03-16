@@ -102,6 +102,40 @@ Prima dell'approvazione, un condòmino che applica backward induction parte dall
 
 Se anche una sola risposta è "non so", la delibera può essere approvata con riserva — richiedendo all'amministratore di integrare la documentazione entro 30 giorni e sottoporre il fascicolo a un revisore esterno prima della prossima assemblea.
 
+```
+DIAGRAMMA — Backward Induction: Condominio Via delle Mimose
+
+  ESITO AVVERSO (punto di partenza della risalita)
+  └─ Accertamento ADE · recupero credito fiscale · contenzioso
+
+          ↑ si risale la catena causale ↑
+
+  CHECKPOINT 4 — Rendiconto 2024
+  └─ Le partite aperte Superbonus compaiono nel riepilogo finanziario?
+     Le passività potenziali sono indicate analiticamente?
+
+  CHECKPOINT 3 — Impresa appaltatrice (fallita 2024)
+  └─ Garanzie rilasciate e dichiarazioni di conformità archiviate?
+
+  CHECKPOINT 2 — Cessione del credito fiscale
+  └─ Compensazione integrale dalla banca, senza riserve o contestazioni?
+
+  CHECKPOINT 1 — Asseverazioni SAL (stati di avanzamento lavori)
+  └─ Atti di asseverazione completi per ogni SAL?
+
+          ↓ ESITO DEL CONTROLLO ↓
+
+  ┌─────────────────────────┐     ┌───────────────────────────────────┐
+  │   Tutti checkpoint: SÌ  │     │  Anche un solo: NON SO / NO       │
+  └────────────┬────────────┘     └────────────────┬──────────────────┘
+               │                                   │
+               ▼                                   ▼
+    DELIBERA SICURA                    APPROVAZIONE CON RISERVA
+    si può votare a favore             → integrare documentazione entro 30 gg
+                                       → revisore esterno prima
+                                         della prossima assemblea
+```
+
 *Pre-mortem.* Ipotizzando che l'assemblea approvi il rendiconto senza questi controlli e che l'ADE notifichi un accertamento 18 mesi dopo: il condòmino che ha votato favorevolmente ha ratificato un documento che non rappresentava la reale situazione patrimoniale. La difesa — "non sapevamo" — è disponibile solo se può dimostrare che le informazioni non erano accessibili al momento del voto. Se l'amministratore aveva la documentazione e non l'ha inclusa nel rendiconto, la responsabilità è sua. Se non la aveva, il problema è a monte nell'esecuzione dei lavori.
 
 ---

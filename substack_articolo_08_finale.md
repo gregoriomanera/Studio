@@ -103,6 +103,41 @@ Quando la controparte non riuscì a reperire le sentenze, il giudice Kevin Caste
 
 *Metodo epistemologico applicato: Falsifiability Check — Principio di Popper (motivazione).* Il caso simulato usa il controllo di falsificabilità come metodo primario — non il ragionamento controfattuale né la backward induction — perché il problema centrale è epistemologico, non decisionale: ogni output AI in un contesto ad alto rischio deve essere trattato come *ipotesi da falsificare*, non come *risposta da verificare per conferma*. La distinzione è rilevante: la verifica per conferma porta a cercare elementi che supportano la risposta AI (bias di conferma); la falsifiability check porta a cercare *una sola prova contraria* che abbatte l'ipotesi. Nel caso specifico, la domanda corretta non è "questa interpretazione della Convenzione Italia-Germania è giusta?" ma "esiste una circolare ADE posteriore al 2015 che la contradice?" — domanda asimmetrica, rapidamente risolvibile, con potere diagnostico molto maggiore.
 
+```
+DIAGRAMMA — Falsification Check (Popper): Studio tributario / ADE
+
+  OUTPUT AI — risposta alla contestazione ADE
+  └─ Convenzione Italia-Germania: articolo corretto
+     Interpretazione: orientamento prevalente (pre-2019)
+     Forma: tecnicamente strutturata, plausibile
+
+          ↓ FALSIFICATION TEST ↓
+     Non: "sembra giusto?" → bias di conferma
+     Ma:  "esiste UNA SOLA prova contraria che abbatte l'ipotesi?"
+
+  DOMANDA DIAGNOSTICA (asimmetrica, binaria)
+  └─ "Esiste una circolare ADE sulla Convenzione Italia-Germania
+      emessa dopo il 2015?"
+
+          ↓ RICERCA (5 minuti su normattiva / ADE) ↓
+
+  ┌──────────────────────────────┐     ┌─────────────────────────────────────┐
+  │   NESSUNA CIRCOLARE          │     │   TROVATA                           │
+  │   RILEVANTE TROVATA          │     │   Circ. ADE n. 28/E/2019           │
+  │                              │     │   (modifica criterio di             │
+  │                              │     │    collegamento post-2015)          │
+  └──────────────┬───────────────┘     └────────────────┬────────────────────┘
+                 │                                      │
+                 ▼                                      ▼
+  IPOTESI AI NON FALSIFICATA              IPOTESI AI FALSIFICATA
+  Output utilizzabile                     → correggere l'argomentazione
+  (verifica confermata,                     prima della consegna
+   con nota metodologica)                 Costo del controllo: 5 min.
+                                          Costo del mancato controllo:
+                                          memoria difensiva inefficace
+                                          · ricorso · seconda procedura
+```
+
 Il professionista che non conosce la circolare 28/E/2019 consegnerà la memoria al cliente senza rilevare l'errore. Il cliente, che non ha il sistema di riferimento per valutarla, la firmerà. L'ADE, che conosce la propria circolare del 2019, rileverà che la difesa si basa su un'interpretazione che ha già esplicitamente superato. La contestazione verrà confermata.
 
 *Ragionamento controfattuale.* Se il professionista avesse utilizzato l'AI per produrre una prima bozza — e poi avesse dedicato 20 minuti a verificare la giurisprudenza ADE più recente sul tema specifico — avrebbe trovato la circolare 28/E/2019 e corretto l'argomentazione. L'AI aveva identificato correttamente il perimetro del problema (convenzione, articolo, criterio di collegamento); aveva sbagliato nel rilevare l'aggiornamento interpretativo. La funzione dell'AI era appropriata; mancava il passaggio di verifica dell'aggiornamento normativo.

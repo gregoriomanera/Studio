@@ -105,6 +105,42 @@ Una società di produzione alimentare con 7 dipendenti e fatturato di €2,1 mil
 
 *Metodo epistemologico applicato: Sensitivity Analysis + Backward Induction (motivazione).* Il caso Ferretti usa due metodi combinati. La *backward induction* identifica il nodo decisionale critico (la valutazione preventiva 3 anni prima, non al momento del decesso). La *sensitivity analysis* risponde a una domanda diversa: quanto è sensibile l'esito alle variabili chiave? La variabile più sensibile non è il valore dell'impresa (i due figli potrebbero convergere su una cifra), ma il timing: una perizia prodotta *durante* la crisi successoria ha meno forza di una prodotta *prima*, perché chiunque l'abbia commissionata ha un interesse percepito nel risultato. Il metodo combinato è preferibile al solo ragionamento controfattuale perché quest'ultimo risponde a "cosa sarebbe successo se X fosse diverso", mentre qui il punto critico è *quando* la decisione doveva essere presa, non solo *quale*.
 
+```
+DIAGRAMMA — Backward Induction + Sensitivity Analysis: Ferretti Srl
+
+  ESITO DESIDERATO (punto di arrivo — si risale da qui)
+  └─ Continuità aziendale · accordo tra eredi · nessun contenzioso
+
+          ↑ BACKWARD INDUCTION: si risale ai prerequisiti ↑
+
+  NODO 3 — Accordo sul valore
+  └─ Richiede: riferimento condiviso e indipendente (perizia terza parte)
+
+  NODO 2 — Perizia indipendente esistente
+  └─ Richiede: prodotta prima dell'evento critico
+     (nessun conflitto d'interesse percepito da nessuna delle parti)
+
+  NODO 1 — TIMING  ◄── variabile più sensibile (sensitivity analysis)
+  └─ Quando è stata commissionata la perizia?
+
+          ↓ SENSITIVITY: il timing cambia l'esito ↓
+
+  ┌──────────────────────────────┐     ┌─────────────────────────────────────┐
+  │   TIMING CORRETTO            │     │   TIMING SBAGLIATO                  │
+  │   Perizia in revisione       │     │   Perizia commissionata dopo        │
+  │   triennale ordinaria        │     │   il decesso del titolare           │
+  │   (es. 3 anni prima)         │     │                                     │
+  └──────────────┬───────────────┘     └────────────────┬────────────────────┘
+                 │                                      │
+                 ▼                                      ▼
+     SCENARIO B                             SCENARIO A
+     Valore condiviso: €580K–640K           Nessun riferimento condiviso
+     Entrambe le parti partono              Posizioni distanti → stallo
+     dallo stesso fatto documentato         40% rischio contenzioso (FNC)
+     → trattativa rapida                   12–24 mesi paralisi gestionale
+     → continuità aziendale                Perdita clienti · spese legali
+```
+
 *Simulazione del processo decisionale con ragionamento controfattuale.*
 
 Scenario A (senza valutazione preventiva): le due parti negoziano senza riferimento. Il figlio fuori dall'azienda, non conoscendo il valore, chiede più del ragionevole. Il figlio tecnico, che conosce le difficoltà operative, offre meno. Si produce un contenzioso tra eredi — modalità standard che, secondo i dati della Fondazione Nazionale Commercialisti, si verifica nel 40% dei passaggi generazionali non pianificati. Costo del contenzioso: 12-24 mesi di paralisi gestionale, potenziale perdita di clienti, spese legali. (Nota metodologica: la valutazione riduce il conflitto informativo, non quello relazionale. Nelle successioni con dinamiche familiari già conflittuali, anche un riferimento indipendente può essere strumentalizzato. La perizia è condizione necessaria ma non sufficiente per la risoluzione del conflitto.)
