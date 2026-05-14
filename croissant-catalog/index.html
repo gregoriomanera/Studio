@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#c8860a"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Croissant Catalog</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" href="icon.svg"/>
+  <style>
+    :root {
+      --bg: #0f0d0a;
+      --surface: #1c1810;
+      --surface2: #2a231a;
+      --border: #3a2e1e;
+      --gold: #c8860a;
+      --gold-light: #e8a020;
+      --gold-dim: #8a5c06;
+      --text: #f0e8d8;
+      --text-dim: #9a8870;
+      --danger: #c0392b;
+      --success: #27ae60;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ── LAYOUT ── */
+    #app { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,13,10,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: env(safe-area-inset-top) 16px 0;
+    }
+
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+
+    .logo { font-size: 22px; font-weight: 700; color: var(--gold); letter-spacing: -.5px; }
+    .logo span { opacity: .6; font-weight: 400; }
+
+    .header-actions { display: flex; gap: 8px; }
+
+    nav {
+      display: flex; gap: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    nav button {
+      flex: 1; background: none; border: none; color: var(--text-dim);
+      padding: 8px 4px 10px;
+      font-size: 11px; font-weight: 500;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; transition: color .15s;
+    }
+
+    nav button.active { color: var(--gold); }
+    nav button .nav-icon { font-size: 20px; }
+
+    main { flex: 1; overflow-y: auto; }
+
+    /* ── VIEWS ── */
+    .view { display: none; padding: 16px; padding-bottom: 24px; }
+    .view.active { display: block; }
+
+    /* ── GALLERY ── */
+    .gallery-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .gallery-title { font-size: 13px; color: var(--text-dim); }
+    .gallery-count { font-weight: 700; color: var(--gold); font-size: 18px; }
+
+    .search-bar {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 14px;
+      color: var(--text); font-size: 15px; width: 100%;
+      margin-bottom: 16px; outline: none;
+    }
+
+    .search-bar::placeholder { color: var(--text-dim); }
+    .search-bar:focus { border-color: var(--gold-dim); }
+
+    .filter-chips {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px;
+      scrollbar-width: none; margin-bottom: 16px;
+    }
+
+    .filter-chips::-webkit-scrollbar { display: none; }
+
+    .chip {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-dim); border-radius: 20px;
+      padding: 6px 14px; font-size: 13px; white-space: nowrap;
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+
+    .chip.active {
+      background: var(--gold); border-color: var(--gold);
+      color: #000; font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      cursor: pointer; transition: transform .15s, border-color .15s;
+      animation: fadeIn .3s ease;
+    }
+
+    .card:active { transform: scale(.97); }
+    .card:hover { border-color: var(--gold-dim); }
+
+    .card-img {
+      width: 100%; aspect-ratio: 1;
+      object-fit: cover; display: block;
+      background: var(--surface2);
+    }
+
+    .card-body { padding: 10px; }
+
+    .card-name {
+      font-size: 13px; font-weight: 600;
+      color: var(--text); margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .card-meta { font-size: 11px; color: var(--text-dim); }
+
+    .badge {
+      display: inline-block; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 2px 7px; font-size: 11px; color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .empty-state {
+      text-align: center; padding: 60px 24px;
+      color: var(--text-dim);
+    }
+
+    .empty-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+    .empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .empty-desc { font-size: 14px; line-height: 1.5; }
+
+    /* ── CAMERA VIEW ── */
+    #view-camera { padding: 0; }
+
+    .camera-container {
+      position: relative; width: 100%; background: #000;
+      min-height: 60vw; display: flex; align-items: center; justify-content: center;
+    }
+
+    #preview {
+      width: 100%; max-height: 70dvh;
+      object-fit: cover; display: block;
+    }
+
+    .camera-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .viewfinder {
+      width: 70%; aspect-ratio: 1;
+      border: 2px solid rgba(200,134,10,.7);
+      border-radius: 16px;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,.3);
+    }
+
+    .camera-hint {
+      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.7); color: #fff; font-size: 12px;
+      padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+      pointer-events: none;
+    }
+
+    #captured-preview {
+      width: 100%; max-height: 70dvh; object-fit: cover;
+      display: none; border-bottom: 1px solid var(--border);
+    }
+
+    .camera-actions {
+      display: flex; gap: 12px; padding: 20px 16px;
+      justify-content: center; align-items: center;
+    }
+
+    .btn-shutter {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--gold); border: 4px solid var(--gold-light);
+      cursor: pointer; transition: transform .1s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+
+    .btn-shutter:active { transform: scale(.9); }
+
+    .btn-shutter.loading {
+      animation: pulse 1s infinite;
+    }
+
+    #btn-upload {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--surface2); border: 1px solid var(--border);
+      cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim); transition: all .15s;
+    }
+
+    #btn-upload:hover { border-color: var(--gold-dim); color: var(--text); }
+
+    #btn-flip {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--surface2); border: 1px solid var(--border);
+      cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim); transition: all .15s;
+    }
+
+    #btn-flip:hover { border-color: var(--gold-dim); color: var(--text); }
+
+    .captured-actions {
+      display: none; gap: 12px; padding: 16px;
+    }
+
+    /* ── ANALYSIS OVERLAY ── */
+    .analysis-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(15,13,10,.97);
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .analysis-overlay.active { display: flex; }
+
+    .spinner {
+      width: 56px; height: 56px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 24px;
+    }
+
+    .analysis-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .analysis-sub { color: var(--text-dim); font-size: 14px; }
+
+    /* ── RESULT PANEL ── */
+    .result-panel {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      display: none; flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .result-panel.active { display: flex; }
+
+    .result-photo {
+      width: 100%; max-height: 40dvh; object-fit: cover;
+      display: block; flex-shrink: 0;
+    }
+
+    .result-body {
+      padding: 20px 16px 32px;
+      flex: 1;
+    }
+
+    .ai-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(200,134,10,.15); border: 1px solid var(--gold-dim);
+      color: var(--gold); border-radius: 20px;
+      padding: 4px 12px; font-size: 12px; font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .result-name-input {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      color: var(--text); font-size: 18px; font-weight: 700;
+      outline: none; margin-bottom: 16px;
+    }
+
+    .result-name-input:focus { border-color: var(--gold-dim); }
+
+    .field-group { margin-bottom: 20px; }
+    .field-label { font-size: 11px; color: var(--text-dim); font-weight: 600;
+      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+
+    .field-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .field-chip {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 12px; font-size: 13px;
+      color: var(--text-dim); cursor: pointer; transition: all .15s;
+    }
+
+    .field-chip.selected {
+      background: rgba(200,134,10,.15); border-color: var(--gold);
+      color: var(--gold); font-weight: 600;
+    }
+
+    .field-input {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 14px;
+      color: var(--text); font-size: 14px; outline: none; resize: none;
+    }
+
+    .field-input:focus { border-color: var(--gold-dim); }
+
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .info-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px;
+    }
+
+    .info-card-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase;
+      letter-spacing: .5px; margin-bottom: 4px; }
+    .info-card-value { font-size: 14px; font-weight: 600; }
+
+    .rating-row {
+      display: flex; gap: 8px; margin-bottom: 20px;
+    }
+
+    .star {
+      font-size: 28px; cursor: pointer; transition: transform .1s;
+      opacity: .3; filter: grayscale(1);
+    }
+
+    .star.active { opacity: 1; filter: none; transform: scale(1.1); }
+    .star:hover { transform: scale(1.2); }
+
+    /* ── DETAIL VIEW ── */
+    .detail-panel {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      display: none; flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .detail-panel.active { display: flex; }
+
+    .detail-photo {
+      width: 100%; max-height: 45dvh; object-fit: cover; flex-shrink: 0;
+      position: relative;
+    }
+
+    .detail-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .detail-back {
+      position: absolute; top: 16px; left: 16px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(0,0,0,.6); border: none;
+      color: #fff; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .detail-delete {
+      position: absolute; top: 16px; right: 16px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(192,57,43,.7); border: none;
+      color: #fff; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .detail-body { padding: 20px 16px 40px; }
+
+    .detail-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .detail-date { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+
+    .detail-stars { display: flex; gap: 4px; margin-bottom: 16px; }
+    .detail-star { font-size: 20px; opacity: .25; }
+    .detail-star.active { opacity: 1; }
+
+    .detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
+    }
+
+    .detail-notes {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px;
+      font-size: 14px; color: var(--text-dim); line-height: 1.6;
+    }
+
+    .detail-notes p { color: var(--text); }
+
+    /* ── SETTINGS ── */
+    #view-settings {}
+
+    .settings-section { margin-bottom: 28px; }
+    .settings-title { font-size: 11px; color: var(--gold); font-weight: 700;
+      text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
+
+    .settings-row {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 2px;
+    }
+
+    .settings-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+
+    .settings-item:last-child { border-bottom: none; }
+
+    .settings-item-label { color: var(--text); }
+    .settings-item-value { color: var(--text-dim); font-size: 14px; }
+
+    .settings-key-input {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px 16px;
+      color: var(--text); font-size: 14px; outline: none;
+      font-family: monospace; letter-spacing: .5px;
+    }
+
+    .settings-key-input:focus { border-color: var(--gold-dim); }
+
+    .settings-key-hint {
+      font-size: 12px; color: var(--text-dim); margin-top: 8px; line-height: 1.5;
+    }
+
+    .model-select {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px 16px;
+      color: var(--text); font-size: 14px; outline: none;
+      -webkit-appearance: none; cursor: pointer;
+    }
+
+    .model-select option { background: var(--bg); }
+
+    .stats-row {
+      display: flex; gap: 10px;
+    }
+
+    .stat-card {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 16px; text-align: center;
+    }
+
+    .stat-value { font-size: 28px; font-weight: 700; color: var(--gold); }
+    .stat-label { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      border: none; border-radius: var(--radius-sm);
+      padding: 14px 20px; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+
+    .btn:active { transform: scale(.97); }
+
+    .btn-primary { background: var(--gold); color: #000; flex: 1; }
+    .btn-primary:hover { background: var(--gold-light); }
+
+    .btn-secondary {
+      background: var(--surface2); color: var(--text);
+      border: 1px solid var(--border); flex: 1;
+    }
+
+    .btn-secondary:hover { border-color: var(--gold-dim); }
+
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-icon {
+      width: 44px; height: 44px; padding: 0; border-radius: var(--radius-sm);
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim);
+      font-size: 18px;
+    }
+
+    .full-width { width: 100%; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 12px 20px; border-radius: 24px;
+      font-size: 14px; z-index: 999;
+      animation: slideUp .3s ease, fadeOut .3s ease 2.7s forwards;
+      white-space: nowrap; box-shadow: 0 4px 24px rgba(0,0,0,.5);
+    }
+
+    .toast.success { border-color: var(--success); color: var(--success); }
+    .toast.error { border-color: var(--danger); color: var(--danger); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(.95); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%); } }
+    @keyframes fadeOut { to { opacity: 0; } }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── HIDDEN UPLOAD ── */
+    #file-input { display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (min-width: 480px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    }
+
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="header-inner">
+      <div class="logo">🥐 <span>Croissant</span>Catalog</div>
+      <div class="header-actions">
+        <button class="btn btn-icon" id="btn-header-add" title="Aggiungi" onclick="switchCamera()">📷</button>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-tab active" data-view="gallery">
+        <span class="nav-icon">🗂️</span>Catalogo
+      </button>
+      <button class="nav-tab" data-view="camera">
+        <span class="nav-icon">📷</span>Scatta
+      </button>
+      <button class="nav-tab" data-view="settings">
+        <span class="nav-icon">⚙️</span>Impostazioni
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- GALLERY -->
+    <div class="view active" id="view-gallery">
+      <div class="gallery-header">
+        <div>
+          <div class="gallery-title">Croissant catalogati</div>
+          <div class="gallery-count" id="catalog-count">0</div>
+        </div>
+      </div>
+
+      <input class="search-bar" id="search-input" type="search"
+             placeholder="🔍 Cerca per nome o categoria…" autocomplete="off"/>
+
+      <div class="filter-chips" id="filter-chips">
+        <div class="chip active" data-filter="tutti">Tutti</div>
+      </div>
+
+      <div class="grid" id="gallery-grid"></div>
+    </div>
+
+    <!-- CAMERA -->
+    <div class="view" id="view-camera">
+      <div class="camera-container" id="camera-container">
+        <video id="preview" autoplay playsinline muted></video>
+        <img id="captured-preview" alt="Foto acquisita"/>
+        <div class="camera-overlay">
+          <div class="viewfinder" id="viewfinder"></div>
+        </div>
+        <div class="camera-hint" id="camera-hint">Inquadra il croissant</div>
+      </div>
+
+      <div class="camera-actions" id="camera-actions">
+        <button class="btn btn-icon" id="btn-flip" title="Cambia fotocamera">🔄</button>
+        <button class="btn-shutter" id="btn-shutter" title="Scatta foto">📷</button>
+        <button class="btn btn-icon" id="btn-upload" title="Carica foto">🖼️</button>
+      </div>
+
+      <div class="captured-actions" id="captured-actions">
+        <button class="btn btn-secondary" id="btn-retake">↩ Riprova</button>
+        <button class="btn btn-primary" id="btn-analyze">✨ Analizza con AI</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="view" id="view-settings">
+      <div class="settings-section">
+        <div class="settings-title">Statistiche</div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Totale</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-categories">0</div>
+            <div class="stat-label">Categorie</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-rating">–</div>
+            <div class="stat-label">Voto medio</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">Chiave API Anthropic</div>
+        <input class="settings-key-input" id="api-key-input" type="password"
+               placeholder="sk-ant-api03-…" autocomplete="off"/>
+        <p class="settings-key-hint">
+          La chiave è salvata solo sul tuo dispositivo e non viene mai inviata a server terzi.<br>
+          Ottienila su <strong>console.anthropic.com</strong>
+        </p>
+        <br>
+        <button class="btn btn-primary full-width" id="btn-save-key">Salva chiave API</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">Modello AI</div>
+        <select class="model-select" id="model-select">
+          <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (veloce, economico)</option>
+          <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 (bilanciato)</option>
+          <option value="claude-opus-4-7">Claude Opus 4.7 (massima qualità)</option>
+        </select>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-title">Dati</div>
+        <button class="btn btn-secondary full-width" id="btn-export" style="margin-bottom:10px">
+          📤 Esporta catalogo (JSON)
+        </button>
+        <button class="btn btn-danger full-width" id="btn-clear">
+          🗑️ Cancella tutto il catalogo
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ANALYSIS OVERLAY -->
+<div class="analysis-overlay" id="analysis-overlay">
+  <div class="spinner"></div>
+  <div class="analysis-title">Analisi in corso…</div>
+  <div class="analysis-sub">Claude sta esaminando il croissant 🥐</div>
+</div>
+
+<!-- RESULT PANEL -->
+<div class="result-panel" id="result-panel">
+  <img class="result-photo" id="result-photo" alt="Foto"/>
+  <div class="result-body">
+    <div class="ai-badge">✨ Analizzato con AI</div>
+
+    <input class="result-name-input" id="result-name" type="text" placeholder="Nome del croissant…"/>
+
+    <div class="field-group">
+      <div class="field-label">Categoria</div>
+      <div class="field-chips" id="category-chips">
+        <div class="field-chip" data-val="Classico">Classico</div>
+        <div class="field-chip" data-val="Integrale">Integrale</div>
+        <div class="field-chip" data-val="Cioccolato">Cioccolato</div>
+        <div class="field-chip" data-val="Mandorle">Mandorle</div>
+        <div class="field-chip" data-val="Salato">Salato</div>
+        <div class="field-chip" data-val="Frutta">Frutta</div>
+        <div class="field-chip" data-val="Vegano">Vegano</div>
+        <div class="field-chip" data-val="Altro">Altro</div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-label">Farcitura</div>
+        <div class="info-card-value" id="r-farcitura">–</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Cottura</div>
+        <div class="info-card-value" id="r-cottura">–</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Forma</div>
+        <div class="info-card-value" id="r-forma">–</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Sfogliatura</div>
+        <div class="info-card-value" id="r-sfogliatura">–</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Voto personale</div>
+      <div class="rating-row" id="rating-stars">
+        <span class="star" data-r="1">⭐</span>
+        <span class="star" data-r="2">⭐</span>
+        <span class="star" data-r="3">⭐</span>
+        <span class="star" data-r="4">⭐</span>
+        <span class="star" data-r="5">⭐</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Note aggiuntive</div>
+      <textarea class="field-input" id="result-notes" rows="3"
+                placeholder="Dove l'hai trovato? Cosa ti ha colpito?"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Osservazioni AI</div>
+      <textarea class="field-input" id="result-ai-notes" rows="3" readonly
+                style="opacity:.7"></textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" id="btn-result-cancel">Annulla</button>
+      <button class="btn btn-primary" id="btn-result-save">💾 Salva nel catalogo</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-photo" id="detail-photo-wrap">
+    <img id="detail-img" alt="Croissant"/>
+    <button class="detail-back" id="btn-detail-back">←</button>
+    <button class="detail-delete" id="btn-detail-delete">🗑️</button>
+  </div>
+  <div class="detail-body">
+    <div class="ai-badge">🥐 Dettaglio</div>
+    <div class="detail-title" id="detail-title"></div>
+    <div class="detail-date" id="detail-date"></div>
+    <div class="detail-stars" id="detail-stars"></div>
+    <div class="detail-grid" id="detail-grid"></div>
+    <div class="detail-notes" id="detail-notes"></div>
+  </div>
+</div>
+
+<!-- hidden file input -->
+<input type="file" id="file-input" accept="image/*" capture="environment"/>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DB — IndexedDB wrapper
+// ═══════════════════════════════════════════════════════
+const DB = (() => {
+  let db;
+  const NAME = 'CroissantDB', VER = 1, STORE = 'items';
+
+  function open() {
+    return new Promise((res, rej) => {
+      if (db) return res(db);
+      const req = indexedDB.open(NAME, VER);
+      req.onupgradeneeded = e => {
+        const d = e.target.result;
+        if (!d.objectStoreNames.contains(STORE)) {
+          const s = d.createObjectStore(STORE, { keyPath: 'id' });
+          s.createIndex('category', 'category');
+          s.createIndex('date', 'date');
+        }
+      };
+      req.onsuccess = e => { db = e.target.result; res(db); };
+      req.onerror = () => rej(req.error);
+    });
+  }
+
+  async function tx(mode) {
+    const d = await open();
+    return d.transaction(STORE, mode).objectStore(STORE);
+  }
+
+  return {
+    async getAll() {
+      const s = await tx('readonly');
+      return new Promise((res, rej) => {
+        const r = s.getAll();
+        r.onsuccess = () => res(r.result.sort((a,b) => b.id - a.id));
+        r.onerror = () => rej(r.error);
+      });
+    },
+    async add(item) {
+      const s = await tx('readwrite');
+      return new Promise((res, rej) => {
+        const r = s.add(item);
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error);
+      });
+    },
+    async delete(id) {
+      const s = await tx('readwrite');
+      return new Promise((res, rej) => {
+        const r = s.delete(id);
+        r.onsuccess = () => res();
+        r.onerror = () => rej(r.error);
+      });
+    },
+    async clear() {
+      const s = await tx('readwrite');
+      return new Promise((res, rej) => {
+        const r = s.clear();
+        r.onsuccess = () => res();
+        r.onerror = () => rej(r.error);
+      });
+    }
+  };
+})();
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let allItems = [];
+let currentFilter = 'tutti';
+let currentSearch = '';
+let capturedImage = null; // base64
+let capturedBlob = null;
+let currentRating = 0;
+let selectedCategory = '';
+let stream = null;
+let facingMode = 'environment';
+let currentDetailId = null;
+
+// ═══════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════
+const Settings = {
+  get apiKey() { return localStorage.getItem('cc_api_key') || ''; },
+  set apiKey(v) { localStorage.setItem('cc_api_key', v); },
+  get model() { return localStorage.getItem('cc_model') || 'claude-sonnet-4-6'; },
+  set model(v) { localStorage.setItem('cc_model', v); }
+};
+
+// ═══════════════════════════════════════════════════════
+// CLAUDE API
+// ═══════════════════════════════════════════════════════
+async function analyzeWithClaude(base64Image) {
+  const key = Settings.apiKey;
+  if (!key) throw new Error('Chiave API mancante. Impostala in Impostazioni.');
+
+  const mediaType = base64Image.startsWith('/9j') ? 'image/jpeg' : 'image/png';
+  const b64 = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+      'anthropic-dangerous-direct-browser-calls': 'true'
+    },
+    body: JSON.stringify({
+      model: Settings.model,
+      max_tokens: 512,
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'image',
+            source: { type: 'base64', media_type: mediaType, data: b64 }
+          },
+          {
+            type: 'text',
+            text: `Sei un esperto di pasticceria francese e italiana. Analizza questa foto e identifica il croissant.
+
+Rispondi SOLO con un oggetto JSON valido, senza markdown, senza spiegazioni:
+
+{
+  "nome": "nome descrittivo breve (es: Croissant al burro classico)",
+  "categoria": "una di: Classico | Integrale | Cioccolato | Mandorle | Salato | Frutta | Vegano | Altro",
+  "farcitura": "descrizione farcitura visibile o 'Nessuna'",
+  "cottura": "una di: Chiara | Dorata | Scura | Molto scura",
+  "forma": "una di: A mezzaluna | Rettangolare | Dritta | Arrotolata | Altro",
+  "sfogliatura": "una di: Molto sfogliato | Sfogliato | Compatto | Non visibile",
+  "note": "osservazione concisa e specifica su aspetto, texture o caratteristiche notevoli (max 80 caratteri)"
+}
+
+Se l'immagine non mostra un croissant, rispondi: {"errore": "Non sembra un croissant"}`
+          }
+        ]
+      }]
+    })
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.error?.message || `Errore API: ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  const text = data.content[0].text.trim();
+
+  try {
+    const parsed = JSON.parse(text);
+    if (parsed.errore) throw new Error(parsed.errore);
+    return parsed;
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (match) return JSON.parse(match[0]);
+    throw new Error('Risposta AI non valida');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// IMAGE UTILS
+// ═══════════════════════════════════════════════════════
+function resizeImage(base64, maxW = 1024) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      res(canvas.toDataURL('image/jpeg', .85));
+    };
+    img.src = base64;
+  });
+}
+
+function makeThumbnail(base64, size = 300) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      const side = Math.min(img.width, img.height);
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+      res(canvas.toDataURL('image/jpeg', .7));
+    };
+    img.src = base64;
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// CAMERA
+// ═══════════════════════════════════════════════════════
+async function startCamera() {
+  stopCamera();
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode, width: { ideal: 1280 }, height: { ideal: 1280 } },
+      audio: false
+    });
+    const video = document.getElementById('preview');
+    video.srcObject = stream;
+    video.style.display = 'block';
+    document.getElementById('captured-preview').style.display = 'none';
+    document.getElementById('camera-actions').style.display = 'flex';
+    document.getElementById('captured-actions').style.display = 'none';
+    document.getElementById('viewfinder').style.display = 'block';
+    document.getElementById('camera-hint').textContent = 'Inquadra il croissant';
+    capturedImage = null;
+  } catch(e) {
+    if (e.name === 'NotAllowedError')
+      toast('Accesso alla fotocamera negato', 'error');
+    else
+      toast('Fotocamera non disponibile', 'error');
+  }
+}
+
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+}
+
+function capturePhoto() {
+  const video = document.getElementById('preview');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  capturedImage = canvas.toDataURL('image/jpeg', .9);
+  showCaptured(capturedImage);
+}
+
+function showCaptured(base64) {
+  stopCamera();
+  const video = document.getElementById('preview');
+  const img = document.getElementById('captured-preview');
+  video.style.display = 'none';
+  img.src = base64;
+  img.style.display = 'block';
+  document.getElementById('viewfinder').style.display = 'none';
+  document.getElementById('camera-hint').style.display = 'none';
+  document.getElementById('camera-actions').style.display = 'none';
+  document.getElementById('captured-actions').style.display = 'flex';
+  capturedImage = base64;
+}
+
+// ═══════════════════════════════════════════════════════
+// GALLERY
+// ═══════════════════════════════════════════════════════
+async function loadGallery() {
+  allItems = await DB.getAll();
+  renderGallery();
+  updateFilterChips();
+  updateStats();
+}
+
+function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  const search = currentSearch.toLowerCase();
+
+  let items = allItems.filter(it => {
+    const matchFilter = currentFilter === 'tutti' || it.category === currentFilter;
+    const matchSearch = !search ||
+      it.name.toLowerCase().includes(search) ||
+      (it.category || '').toLowerCase().includes(search);
+    return matchFilter && matchSearch;
+  });
+
+  document.getElementById('catalog-count').textContent = items.length;
+
+  if (items.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <span class="empty-icon">🥐</span>
+        <div class="empty-title">${allItems.length === 0 ? 'Nessun croissant ancora' : 'Nessun risultato'}</div>
+        <div class="empty-desc">${allItems.length === 0
+          ? 'Scatta una foto per iniziare il catalogo!'
+          : 'Prova con un\'altra ricerca o categoria'}</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(it => `
+    <div class="card" data-id="${it.id}">
+      <img class="card-img" src="${it.thumbnail || it.photo}" alt="${it.name}" loading="lazy"/>
+      <div class="card-body">
+        <div class="card-name">${it.name}</div>
+        <div class="card-meta">${it.category || ''}</div>
+        <div class="badge">${it.analysis?.cottura || ''}</div>
+        ${it.rating ? `<div style="font-size:12px;margin-top:4px">${'⭐'.repeat(it.rating)}</div>` : ''}
+      </div>
+    </div>`).join('');
+
+  grid.querySelectorAll('.card').forEach(c => {
+    c.addEventListener('click', () => openDetail(+c.dataset.id));
+  });
+}
+
+function updateFilterChips() {
+  const categories = [...new Set(allItems.map(i => i.category).filter(Boolean))];
+  const container = document.getElementById('filter-chips');
+  container.innerHTML = `<div class="chip ${currentFilter==='tutti'?'active':''}" data-filter="tutti">Tutti</div>` +
+    categories.map(c => `<div class="chip ${currentFilter===c?'active':''}" data-filter="${c}">${c}</div>`).join('');
+
+  container.querySelectorAll('.chip').forEach(ch => {
+    ch.addEventListener('click', () => {
+      currentFilter = ch.dataset.filter;
+      container.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+      ch.classList.add('active');
+      renderGallery();
+    });
+  });
+}
+
+function updateStats() {
+  const total = allItems.length;
+  const cats = new Set(allItems.map(i => i.category).filter(Boolean)).size;
+  const rated = allItems.filter(i => i.rating);
+  const avg = rated.length ? (rated.reduce((s,i) => s+i.rating,0)/rated.length).toFixed(1) : '–';
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-categories').textContent = cats;
+  document.getElementById('stat-rating').textContent = avg;
+  document.getElementById('catalog-count').textContent = allItems.length;
+}
+
+// ═══════════════════════════════════════════════════════
+// RESULT PANEL
+// ═══════════════════════════════════════════════════════
+function openResult(analysis) {
+  currentRating = 0;
+  selectedCategory = analysis.categoria || 'Classico';
+
+  document.getElementById('result-photo').src = capturedImage;
+  document.getElementById('result-name').value = analysis.nome || '';
+  document.getElementById('r-farcitura').textContent = analysis.farcitura || '–';
+  document.getElementById('r-cottura').textContent = analysis.cottura || '–';
+  document.getElementById('r-forma').textContent = analysis.forma || '–';
+  document.getElementById('r-sfogliatura').textContent = analysis.sfogliatura || '–';
+  document.getElementById('result-ai-notes').value = analysis.note || '';
+  document.getElementById('result-notes').value = '';
+
+  // category chips
+  document.querySelectorAll('#category-chips .field-chip').forEach(ch => {
+    ch.classList.toggle('selected', ch.dataset.val === selectedCategory);
+    ch.onclick = () => {
+      selectedCategory = ch.dataset.val;
+      document.querySelectorAll('#category-chips .field-chip').forEach(x => x.classList.remove('selected'));
+      ch.classList.add('selected');
+    };
+  });
+
+  // stars
+  setStars(0);
+
+  document.getElementById('result-panel').classList.add('active');
+}
+
+function setStars(n) {
+  currentRating = n;
+  document.querySelectorAll('#rating-stars .star').forEach((s, i) => {
+    s.classList.toggle('active', i < n);
+  });
+}
+
+async function saveResult() {
+  const name = document.getElementById('result-name').value.trim();
+  if (!name) { toast('Inserisci un nome', 'error'); return; }
+
+  const [photo, thumbnail] = await Promise.all([
+    resizeImage(capturedImage, 1024),
+    makeThumbnail(capturedImage, 300)
+  ]);
+
+  const item = {
+    id: Date.now(),
+    name,
+    category: selectedCategory,
+    photo,
+    thumbnail,
+    rating: currentRating || null,
+    notes: document.getElementById('result-notes').value.trim(),
+    analysis: {
+      farcitura: document.getElementById('r-farcitura').textContent,
+      cottura: document.getElementById('r-cottura').textContent,
+      forma: document.getElementById('r-forma').textContent,
+      sfogliatura: document.getElementById('r-sfogliatura').textContent,
+      note: document.getElementById('result-ai-notes').value
+    },
+    date: new Date().toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
+  };
+
+  await DB.add(item);
+  closeResult();
+  await loadGallery();
+  toast('Croissant salvato! 🥐', 'success');
+  showView('gallery');
+}
+
+function closeResult() {
+  document.getElementById('result-panel').classList.remove('active');
+}
+
+// ═══════════════════════════════════════════════════════
+// DETAIL
+// ═══════════════════════════════════════════════════════
+function openDetail(id) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  currentDetailId = id;
+
+  document.getElementById('detail-img').src = item.photo;
+  document.getElementById('detail-title').textContent = item.name;
+  document.getElementById('detail-date').textContent = item.date || '';
+
+  const stars = document.getElementById('detail-stars');
+  stars.innerHTML = [1,2,3,4,5].map(n =>
+    `<span class="detail-star ${item.rating && n <= item.rating ? 'active' : ''}">⭐</span>`
+  ).join('');
+
+  const a = item.analysis || {};
+  document.getElementById('detail-grid').innerHTML = [
+    ['Categoria', item.category],
+    ['Farcitura', a.farcitura],
+    ['Cottura', a.cottura],
+    ['Forma', a.forma],
+    ['Sfogliatura', a.sfogliatura]
+  ].filter(([,v]) => v && v !== '–').map(([k,v]) => `
+    <div class="info-card">
+      <div class="info-card-label">${k}</div>
+      <div class="info-card-value">${v}</div>
+    </div>`).join('');
+
+  const notes = document.getElementById('detail-notes');
+  const parts = [];
+  if (item.notes) parts.push(`<p>${item.notes}</p>`);
+  if (a.note) parts.push(`<span style="opacity:.6">AI: ${a.note}</span>`);
+  notes.innerHTML = parts.join('<br>') || '<span style="opacity:.4">Nessuna nota</span>';
+
+  document.getElementById('detail-panel').classList.add('active');
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('active');
+  currentDetailId = null;
+}
+
+async function deleteDetail() {
+  if (!currentDetailId) return;
+  if (!confirm('Eliminare questo croissant dal catalogo?')) return;
+  await DB.delete(currentDetailId);
+  closeDetail();
+  await loadGallery();
+  toast('Eliminato');
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === name);
+  });
+
+  if (name === 'camera') {
+    startCamera();
+    document.getElementById('camera-hint').style.display = 'block';
+  } else {
+    stopCamera();
+  }
+
+  if (name === 'gallery') loadGallery();
+  if (name === 'settings') updateStats();
+}
+
+function switchCamera() { showView('camera'); }
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+function toast(msg, type = '') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════
+function exportData() {
+  const data = allItems.map(i => ({
+    id: i.id, name: i.name, category: i.category,
+    rating: i.rating, notes: i.notes, analysis: i.analysis, date: i.date
+  }));
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `croissant-catalog-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // nav tabs
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.addEventListener('click', () => showView(btn.dataset.view));
+  });
+
+  // camera controls
+  document.getElementById('btn-shutter').addEventListener('click', capturePhoto);
+
+  document.getElementById('btn-flip').addEventListener('click', () => {
+    facingMode = facingMode === 'environment' ? 'user' : 'environment';
+    startCamera();
+  });
+
+  document.getElementById('btn-upload').addEventListener('click', () => {
+    document.getElementById('file-input').click();
+  });
+
+  document.getElementById('file-input').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => showCaptured(ev.target.result);
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  });
+
+  document.getElementById('btn-retake').addEventListener('click', startCamera);
+
+  document.getElementById('btn-analyze').addEventListener('click', async () => {
+    if (!capturedImage) return;
+    if (!Settings.apiKey) {
+      toast('Inserisci la chiave API in Impostazioni', 'error');
+      showView('settings');
+      return;
+    }
+
+    document.getElementById('analysis-overlay').classList.add('active');
+
+    try {
+      const analysis = await analyzeWithClaude(capturedImage);
+      document.getElementById('analysis-overlay').classList.remove('active');
+      openResult(analysis);
+    } catch(e) {
+      document.getElementById('analysis-overlay').classList.remove('active');
+      toast(e.message, 'error');
+    }
+  });
+
+  // result panel
+  document.getElementById('btn-result-save').addEventListener('click', saveResult);
+  document.getElementById('btn-result-cancel').addEventListener('click', () => {
+    closeResult();
+    showView('camera');
+    startCamera();
+  });
+
+  document.querySelectorAll('#rating-stars .star').forEach(s => {
+    s.addEventListener('click', () => setStars(+s.dataset.r));
+  });
+
+  // detail panel
+  document.getElementById('btn-detail-back').addEventListener('click', closeDetail);
+  document.getElementById('btn-detail-delete').addEventListener('click', deleteDetail);
+
+  // settings
+  document.getElementById('api-key-input').value = Settings.apiKey;
+  document.getElementById('model-select').value = Settings.model;
+
+  document.getElementById('btn-save-key').addEventListener('click', () => {
+    Settings.apiKey = document.getElementById('api-key-input').value.trim();
+    Settings.model = document.getElementById('model-select').value;
+    toast('Impostazioni salvate ✓', 'success');
+  });
+
+  document.getElementById('model-select').addEventListener('change', e => {
+    Settings.model = e.target.value;
+  });
+
+  document.getElementById('btn-export').addEventListener('click', exportData);
+
+  document.getElementById('btn-clear').addEventListener('click', async () => {
+    if (!confirm('Eliminare TUTTO il catalogo? Questa azione è irreversibile.')) return;
+    await DB.clear();
+    await loadGallery();
+    toast('Catalogo svuotato');
+  });
+
+  // search
+  document.getElementById('search-input').addEventListener('input', e => {
+    currentSearch = e.target.value;
+    renderGallery();
+  });
+
+  // service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
+  // init gallery
+  await loadGallery();
+});
+</script>
+</body>
+</html>
