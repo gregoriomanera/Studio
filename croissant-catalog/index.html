@@ -563,6 +563,9 @@
   <main>
     <!-- GALLERY -->
     <div class="view active" id="view-gallery">
+      <div id="demo-banner" style="display:none;background:rgba(200,134,10,.12);border:1px solid rgba(200,134,10,.35);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--gold);cursor:pointer">
+        🎭 <strong>Modalità Demo attiva</strong> — nessuna chiave API. Tocca per impostazioni.
+      </div>
       <div class="gallery-header">
         <div>
           <div class="gallery-title">Croissant catalogati</div>
@@ -601,6 +604,12 @@
         <button class="btn btn-secondary" id="btn-retake">↩ Riprova</button>
         <button class="btn btn-primary" id="btn-analyze">✨ Analizza con AI</button>
       </div>
+
+      <div style="padding:0 16px 8px;text-align:center">
+        <button class="btn btn-secondary full-width" id="btn-demo-quick" style="font-size:13px;padding:10px">
+          🎭 Demo rapida — simula analisi senza fotocamera
+        </button>
+      </div>
     </div>
 
     <!-- SETTINGS -->
@@ -621,6 +630,20 @@
             <div class="stat-label">Voto medio</div>
           </div>
         </div>
+      </div>
+
+      <div class="settings-section" id="demo-section">
+        <div class="settings-title" style="color:#e8a020">🎭 Modalità Demo</div>
+        <div style="background:rgba(200,134,10,.1);border:1px solid rgba(200,134,10,.3);border-radius:12px;padding:14px;margin-bottom:12px;font-size:13px;color:var(--text-dim);line-height:1.6">
+          Senza chiave API l'app usa dati simulati.<br>
+          Puoi esplorare tutte le funzioni: fotocamera, analisi AI, catalogo, filtri, dettaglio.
+        </div>
+        <button class="btn btn-secondary full-width" id="btn-load-demo" style="margin-bottom:8px">
+          📦 Popola catalogo con 6 esempi
+        </button>
+        <button class="btn btn-secondary full-width" id="btn-demo-one">
+          🥐 Aggiungi 1 croissant demo
+        </button>
       </div>
 
       <div class="settings-section">
@@ -834,6 +857,7 @@ let selectedCategory = '';
 let stream = null;
 let facingMode = 'environment';
 let currentDetailId = null;
+const DEMO_PLACEHOLDER = '__demo__';
 
 // ═══════════════════════════════════════════════════════
 // SETTINGS
@@ -844,6 +868,87 @@ const Settings = {
   get model() { return localStorage.getItem('cc_model') || 'claude-sonnet-4-6'; },
   set model(v) { localStorage.setItem('cc_model', v); }
 };
+
+// ═══════════════════════════════════════════════════════
+// DEMO DATA
+// ═══════════════════════════════════════════════════════
+const DEMO_RESPONSES = [
+  { nome: 'Croissant al burro classico', categoria: 'Classico', farcitura: 'Nessuna',
+    cottura: 'Dorata', forma: 'A mezzaluna', sfogliatura: 'Molto sfogliato',
+    note: 'Sfogliatura fine e regolare, colore ambrato uniforme, profumo burroso' },
+  { nome: 'Croissant al cioccolato fondente', categoria: 'Cioccolato', farcitura: 'Crema al cioccolato 70%',
+    cottura: 'Dorata', forma: 'Rettangolare', sfogliatura: 'Sfogliato',
+    note: 'Farcitura abbondante, punta leggermente bruciacchiata, ganache visibile' },
+  { nome: 'Croissant alle mandorle', categoria: 'Mandorle', farcitura: 'Frangipane alle mandorle',
+    cottura: 'Scura', forma: 'A mezzaluna', sfogliatura: 'Compatto',
+    note: 'Granella di mandorle in superficie, zucchero a velo, cottura intensa' },
+  { nome: 'Croissant prosciutto e brie', categoria: 'Salato', farcitura: 'Prosciutto cotto + brie',
+    cottura: 'Dorata', forma: 'Dritta', sfogliatura: 'Sfogliato',
+    note: 'Formaggio fuso visibile ai lati, impasto leggermente salato' },
+  { nome: 'Croissant integrale ai semi', categoria: 'Integrale', farcitura: 'Nessuna',
+    cottura: 'Scura', forma: 'A mezzaluna', sfogliatura: 'Molto sfogliato',
+    note: 'Semi di sesamo e girasole in superficie, colore brunito, aroma tostato' },
+  { nome: 'Croissant alla fragola', categoria: 'Frutta', farcitura: 'Confettura di fragole artigianale',
+    cottura: 'Chiara', forma: 'A mezzaluna', sfogliatura: 'Sfogliato',
+    note: 'Farcitura rossastra visibile all\'apertura, glassa lucida in superficie' },
+];
+
+let demoIndex = 0;
+
+function makeDemoImage(analysis) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 800;
+  const ctx = canvas.getContext('2d');
+
+  // background gradient
+  const colors = {
+    'Classico':    ['#c8860a','#8a5c06'],
+    'Cioccolato':  ['#5c3317','#3b1f0a'],
+    'Mandorle':    ['#b8860b','#7a5a00'],
+    'Salato':      ['#6b8e5e','#3e5c35'],
+    'Integrale':   ['#8b7355','#5c4a2a'],
+    'Frutta':      ['#c0392b','#8e1b12'],
+    'Vegano':      ['#5f9e6e','#2e6b45'],
+    'Altro':       ['#888','#555'],
+  };
+  const [c1, c2] = colors[analysis.categoria] || colors['Altro'];
+  const grad = ctx.createRadialGradient(400, 380, 60, 400, 400, 440);
+  grad.addColorStop(0, c1);
+  grad.addColorStop(1, c2);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 800, 800);
+
+  // noise texture
+  for (let i = 0; i < 4000; i++) {
+    ctx.fillStyle = `rgba(255,255,255,${Math.random() * .04})`;
+    ctx.fillRect(Math.random()*800, Math.random()*800, 2, 2);
+  }
+
+  // emoji
+  ctx.font = '320px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🥐', 400, 380);
+
+  // label
+  ctx.fillStyle = 'rgba(0,0,0,.55)';
+  ctx.fillRect(0, 680, 800, 120);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 36px -apple-system,sans-serif';
+  ctx.fillText(analysis.nome, 400, 725);
+  ctx.fillStyle = 'rgba(255,255,255,.7)';
+  ctx.font = '28px -apple-system,sans-serif';
+  ctx.fillText(`${analysis.categoria} · ${analysis.cottura}`, 400, 768);
+
+  return canvas.toDataURL('image/jpeg', .88);
+}
+
+async function simulateAnalysis() {
+  const analysis = DEMO_RESPONSES[demoIndex % DEMO_RESPONSES.length];
+  demoIndex++;
+  await new Promise(r => setTimeout(r, 1400)); // simulate network delay
+  return analysis;
+}
 
 // ═══════════════════════════════════════════════════════
 // CLAUDE API
@@ -1012,6 +1117,8 @@ async function loadGallery() {
   renderGallery();
   updateFilterChips();
   updateStats();
+  const banner = document.getElementById('demo-banner');
+  if (banner) banner.style.display = Settings.apiKey ? 'none' : 'block';
 }
 
 function renderGallery() {
@@ -1298,20 +1405,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('btn-analyze').addEventListener('click', async () => {
     if (!capturedImage) return;
-    if (!Settings.apiKey) {
-      toast('Inserisci la chiave API in Impostazioni', 'error');
-      showView('settings');
-      return;
-    }
 
-    document.getElementById('analysis-overlay').classList.add('active');
+    const overlay = document.getElementById('analysis-overlay');
+    overlay.classList.add('active');
 
     try {
-      const analysis = await analyzeWithClaude(capturedImage);
-      document.getElementById('analysis-overlay').classList.remove('active');
+      let analysis;
+      if (!Settings.apiKey) {
+        // demo mode: simulate AI with mock data
+        overlay.querySelector('.analysis-sub').textContent = '🎭 Modalità Demo — dati simulati';
+        analysis = await simulateAnalysis();
+        // if user used camera/placeholder, replace with styled demo image
+        if (capturedImage === DEMO_PLACEHOLDER) {
+          capturedImage = makeDemoImage(analysis);
+        }
+      } else {
+        overlay.querySelector('.analysis-sub').textContent = 'Claude sta esaminando il croissant 🥐';
+        analysis = await analyzeWithClaude(capturedImage);
+      }
+      overlay.classList.remove('active');
       openResult(analysis);
     } catch(e) {
-      document.getElementById('analysis-overlay').classList.remove('active');
+      overlay.classList.remove('active');
       toast(e.message, 'error');
     }
   });
@@ -1355,11 +1470,90 @@ document.addEventListener('DOMContentLoaded', async () => {
     toast('Catalogo svuotato');
   });
 
+  // demo quick button (camera view)
+  document.getElementById('btn-demo-quick').addEventListener('click', () => {
+    capturedImage = DEMO_PLACEHOLDER;
+    // show a placeholder in the preview
+    const img = document.getElementById('captured-preview');
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = 400; tempCanvas.height = 400;
+    const ctx = tempCanvas.getContext('2d');
+    const g = ctx.createLinearGradient(0,0,400,400);
+    g.addColorStop(0,'#2a1f0f'); g.addColorStop(1,'#1a1208');
+    ctx.fillStyle = g; ctx.fillRect(0,0,400,400);
+    ctx.font = '200px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('🥐', 200, 185);
+    ctx.fillStyle = 'rgba(200,134,10,.8)'; ctx.font = 'bold 28px sans-serif';
+    ctx.fillText('DEMO — premi Analizza', 200, 360);
+    img.src = tempCanvas.toDataURL();
+    img.style.display = 'block';
+    document.getElementById('preview').style.display = 'none';
+    document.getElementById('viewfinder').style.display = 'none';
+    document.getElementById('camera-hint').style.display = 'none';
+    document.getElementById('camera-actions').style.display = 'none';
+    document.getElementById('captured-actions').style.display = 'flex';
+    stopCamera();
+  });
+
+  // demo: populate all 6
+  document.getElementById('btn-load-demo').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-load-demo');
+    btn.textContent = '⏳ Caricamento…'; btn.disabled = true;
+    for (const resp of DEMO_RESPONSES) {
+      const photo = makeDemoImage(resp);
+      const [resized, thumb] = await Promise.all([
+        resizeImage(photo, 1024), makeThumbnail(photo, 300)
+      ]);
+      await DB.add({
+        id: Date.now() + Math.random(),
+        name: resp.nome, category: resp.categoria,
+        photo: resized, thumbnail: thumb,
+        rating: Math.ceil(Math.random() * 2) + 3,
+        notes: '',
+        analysis: { farcitura: resp.farcitura, cottura: resp.cottura,
+                    forma: resp.forma, sfogliatura: resp.sfogliatura, note: resp.note },
+        date: new Date(Date.now() - Math.random()*30*864e5)
+              .toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
+      });
+      await new Promise(r => setTimeout(r, 80));
+    }
+    await loadGallery();
+    toast('6 croissant demo aggiunti al catalogo 🥐', 'success');
+    btn.textContent = '📦 Popola catalogo con 6 esempi'; btn.disabled = false;
+    showView('gallery');
+  });
+
+  // demo: add single
+  document.getElementById('btn-demo-one').addEventListener('click', async () => {
+    const resp = DEMO_RESPONSES[demoIndex % DEMO_RESPONSES.length];
+    demoIndex++;
+    const photo = makeDemoImage(resp);
+    const [resized, thumb] = await Promise.all([
+      resizeImage(photo, 1024), makeThumbnail(photo, 300)
+    ]);
+    await DB.add({
+      id: Date.now(),
+      name: resp.nome, category: resp.categoria,
+      photo: resized, thumbnail: thumb,
+      rating: null, notes: '',
+      analysis: { farcitura: resp.farcitura, cottura: resp.cottura,
+                  forma: resp.forma, sfogliatura: resp.sfogliatura, note: resp.note },
+      date: new Date().toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
+    });
+    await loadGallery();
+    toast(`"${resp.nome}" aggiunto 🥐`, 'success');
+    showView('gallery');
+  });
+
   // search
   document.getElementById('search-input').addEventListener('input', e => {
     currentSearch = e.target.value;
     renderGallery();
   });
+
+  // demo banner click
+  const demoBanner = document.getElementById('demo-banner');
+  if (demoBanner) demoBanner.addEventListener('click', () => showView('settings'));
 
   // service worker
   if ('serviceWorker' in navigator) {
