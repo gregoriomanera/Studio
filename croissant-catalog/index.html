@@ -4,150 +4,120 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#c8860a"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
 <title>🥐 Croissant Catalog</title>
 <link rel="manifest" href="manifest.json"/>
 <style>
 :root {
-  --bg:#0f0d0a; --surf:#1c1810; --surf2:#241e14; --border:#3a2e1e;
-  --gold:#c8860a; --gold2:#e8a020; --golddim:#8a5c06;
-  --text:#f0e8d8; --dim:#9a8870; --danger:#c0392b; --ok:#27ae60;
+  --bg:#0f0d0a; --s:#1c1810; --s2:#241e14; --b:#3a2e1e;
+  --gold:#c8860a; --gold2:#e8a020; --gdim:#8a5c06;
+  --t:#f0e8d8; --dim:#9a8870; --err:#c0392b; --ok:#27ae60;
   --r:14px; --rs:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-  background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+  background:var(--bg);color:var(--t);display:flex;flex-direction:column}
 
-/* ── HEADER ── */
 header{
-  flex-shrink:0;
-  background:rgba(15,13,10,.95);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);
-  padding-top:env(safe-area-inset-top);
+  flex-shrink:0;background:rgba(15,13,10,.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--b);padding-top:env(safe-area-inset-top);
 }
 .hrow{display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 16px}
-.logo{font-size:20px;font-weight:700;color:var(--gold);letter-spacing:-.4px}
+.logo{font-size:20px;font-weight:700;color:var(--gold)}
 .logo small{font-weight:400;opacity:.6}
 nav{display:flex}
 nav button{
   flex:1;background:none;border:none;color:var(--dim);
   padding:7px 4px 9px;font-size:11px;font-weight:500;
-  display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
-  transition:color .15s;border-top:2px solid transparent;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;border-top:2px solid transparent;transition:color .15s;
 }
 nav button.on{color:var(--gold);border-top-color:var(--gold)}
-nav button .ic{font-size:19px}
+.ic{font-size:19px}
 
-/* ── MAIN SCROLL AREA ── */
 main{flex:1;overflow:hidden;position:relative}
 .view{position:absolute;inset:0;overflow-y:auto;padding:16px;display:none}
 .view.on{display:block}
-#vcam{padding:0;display:none;flex-direction:column}
-#vcam.on{display:flex}
+
+/* ── NUOVO ── */
+.card-input{
+  background:var(--s);border:1px solid var(--b);border-radius:var(--r);
+  padding:18px;margin-bottom:14px;
+}
+.card-input h2{font-size:16px;font-weight:700;margin-bottom:4px}
+.card-input p{font-size:13px;color:var(--dim);margin-bottom:14px;line-height:1.5}
+
+.kw-wrap{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;
+}
+.kw-group{display:contents}
+.kw-label{width:100%;font-size:10px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.5px;margin-top:8px;margin-bottom:4px}
+.kw{
+  background:var(--s2);border:1px solid var(--b);border-radius:20px;
+  padding:7px 14px;font-size:13px;color:var(--dim);cursor:pointer;
+  transition:all .15s;user-select:none;
+}
+.kw.on{background:rgba(200,134,10,.18);border-color:var(--gold);color:var(--gold);font-weight:600}
+
+.free-inp{
+  width:100%;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);
+  padding:11px 14px;color:var(--t);font-size:14px;outline:none;
+  font-family:inherit;resize:none;
+}
+.free-inp:focus{border-color:var(--gdim)}
+.free-inp::placeholder{color:var(--dim)}
+
+.selected-display{
+  min-height:36px;background:var(--s2);border:1px solid var(--b);
+  border-radius:var(--rs);padding:8px 12px;margin-bottom:12px;
+  font-size:13px;color:var(--gold);display:flex;align-items:center;flex-wrap:wrap;gap:4px;
+}
+.selected-display.empty{color:var(--dim)}
 
 /* ── GALLERY ── */
 .g-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
 .g-count{font-size:28px;font-weight:700;color:var(--gold);line-height:1}
 .g-label{font-size:12px;color:var(--dim)}
 input.search{
-  width:100%;background:var(--surf);border:1px solid var(--border);
-  border-radius:var(--rs);padding:10px 14px;color:var(--text);font-size:15px;
+  width:100%;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);padding:10px 14px;color:var(--t);font-size:15px;
   outline:none;margin-bottom:12px;
 }
-input.search:focus{border-color:var(--golddim)}
+input.search:focus{border-color:var(--gdim)}
 input.search::placeholder{color:var(--dim)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;margin-bottom:14px}
 .chips::-webkit-scrollbar{display:none}
 .chip{
-  background:var(--surf);border:1px solid var(--border);color:var(--dim);
+  background:var(--s);border:1px solid var(--b);color:var(--dim);
   border-radius:20px;padding:5px 13px;font-size:13px;white-space:nowrap;
-  cursor:pointer;transition:all .15s;user-select:none;flex-shrink:0;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
 }
 .chip.on{background:var(--gold);border-color:var(--gold);color:#000;font-weight:600}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .card{
-  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
+  background:var(--s);border:1px solid var(--b);border-radius:var(--r);
   overflow:hidden;cursor:pointer;transition:border-color .15s,transform .1s;
 }
 .card:active{transform:scale(.97)}
-.card:hover{border-color:var(--golddim)}
-.card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--surf2);display:block}
+.card:hover{border-color:var(--gdim)}
+.card-img{width:100%;aspect-ratio:1;display:block;object-fit:cover}
 .card-b{padding:9px 10px}
 .card-n{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
 .card-s{font-size:11px;color:var(--dim)}
 .empty{text-align:center;padding:50px 20px;color:var(--dim);grid-column:1/-1}
 .empty .ei{font-size:56px;display:block;margin-bottom:14px}
-.empty h3{color:var(--text);margin-bottom:6px;font-size:17px}
+.empty h3{color:var(--t);margin-bottom:6px;font-size:17px}
 .empty p{font-size:13px;line-height:1.6}
 
-/* ── CAMERA VIEW ── */
-.cam-box{
-  position:relative;background:#000;overflow:hidden;
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  min-height:55vw;max-height:65dvh;
-}
-#vid{width:100%;height:100%;object-fit:cover;display:none}
-#cap-img{width:100%;height:100%;object-fit:cover;display:none}
-.cam-frame{
-  position:absolute;inset:0;pointer-events:none;
-  display:flex;align-items:center;justify-content:center;
-}
-.frame-sq{
-  width:65%;aspect-ratio:1;border:2px solid rgba(200,134,10,.7);
-  border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.3);
-}
-.cam-msg{
-  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
-  background:rgba(0,0,0,.65);color:#fff;font-size:12px;
-  padding:5px 14px;border-radius:20px;white-space:nowrap;pointer-events:none;
-}
-.cam-err{
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;padding:24px;text-align:center;min-height:55vw;
-  background:var(--surf);
-}
-.cam-err .eic{font-size:48px}
-.cam-err p{font-size:13px;color:var(--dim);line-height:1.5;max-width:280px}
-
-.bar{display:flex;gap:12px;align-items:center;justify-content:center;padding:18px 16px}
-.bar.hidden{display:none}
-.shutter{
-  width:68px;height:68px;border-radius:50%;background:var(--gold);
-  border:4px solid var(--gold2);cursor:pointer;font-size:26px;
-  display:flex;align-items:center;justify-content:center;transition:transform .1s;
-}
-.shutter:active{transform:scale(.88)}
-.icon-btn{
-  width:46px;height:46px;border-radius:50%;background:var(--surf2);
-  border:1px solid var(--border);font-size:19px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;color:var(--dim);
-}
-.icon-btn:hover{border-color:var(--golddim);color:var(--text)}
-
-.act-bar{display:none;gap:10px;padding:12px 16px 0}
-
-/* demo strip always visible in camera view */
-.demo-strip{
-  margin:0 16px 16px;background:rgba(200,134,10,.08);
-  border:1px solid rgba(200,134,10,.25);border-radius:var(--rs);
-  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
-}
-.demo-strip p{font-size:13px;color:var(--dim);line-height:1.4}
-.demo-strip p strong{color:var(--text)}
-.demo-strip button{
-  flex-shrink:0;background:var(--gold);color:#000;border:none;
-  border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;
-}
-
-/* ── OVERLAY: analysis ── */
+/* ── OVERLAY ── */
 .ov{
   position:fixed;inset:0;z-index:300;background:rgba(10,8,5,.96);
   display:none;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:32px;
 }
 .ov.on{display:flex}
-.spin{width:52px;height:52px;border:3px solid var(--border);border-top-color:var(--gold);
+.spin{width:52px;height:52px;border:3px solid var(--b);border-top-color:var(--gold);
   border-radius:50%;animation:spin 1s linear infinite;margin-bottom:22px}
 .ov-title{font-size:20px;font-weight:700;margin-bottom:8px}
 .ov-sub{color:var(--dim);font-size:14px}
@@ -158,50 +128,50 @@ input.search::placeholder{color:var(--dim)}
   display:none;flex-direction:column;overflow-y:auto;
 }
 .panel.on{display:flex}
-.panel-photo{width:100%;max-height:38dvh;object-fit:cover;flex-shrink:0;display:block}
-.panel-body{padding:18px 16px 36px;flex:1}
+.panel-img{width:100%;aspect-ratio:2/1;object-fit:cover;flex-shrink:0;display:block}
+.panel-body{padding:18px 16px 40px;flex:1}
 .ai-tag{
   display:inline-flex;align-items:center;gap:5px;
-  background:rgba(200,134,10,.12);border:1px solid var(--golddim);
+  background:rgba(200,134,10,.12);border:1px solid var(--gdim);
   color:var(--gold);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:600;
   margin-bottom:14px;
 }
 .name-inp{
-  width:100%;background:var(--surf);border:1px solid var(--border);
-  border-radius:var(--rs);padding:11px 14px;color:var(--text);
+  width:100%;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);padding:11px 14px;color:var(--t);
   font-size:17px;font-weight:700;outline:none;margin-bottom:14px;
 }
-.name-inp:focus{border-color:var(--golddim)}
+.name-inp:focus{border-color:var(--gdim)}
 .fl{font-size:11px;color:var(--dim);font-weight:600;text-transform:uppercase;
-  letter-spacing:.5px;margin-bottom:7px}
-.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  letter-spacing:.5px;margin-bottom:7px;margin-top:12px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
 .fchip{
-  background:var(--surf);border:1px solid var(--border);border-radius:8px;
+  background:var(--s);border:1px solid var(--b);border-radius:8px;
   padding:6px 12px;font-size:13px;color:var(--dim);cursor:pointer;transition:all .15s;
 }
 .fchip.on{background:rgba(200,134,10,.15);border-color:var(--gold);color:var(--gold);font-weight:600}
-.igrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
-.icard{background:var(--surf);border:1px solid var(--border);border-radius:var(--rs);padding:11px}
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.icard{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:11px}
 .icard-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
 .icard-v{font-size:14px;font-weight:600}
-.stars{display:flex;gap:6px;margin-bottom:14px}
-.star{font-size:26px;cursor:pointer;opacity:.25;transition:transform .1s}
+.stars{display:flex;gap:8px;margin:8px 0 12px}
+.star{font-size:28px;cursor:pointer;opacity:.22;transition:transform .1s}
 .star.on{opacity:1;transform:scale(1.1)}
 textarea.fi{
-  width:100%;background:var(--surf);border:1px solid var(--border);
-  border-radius:var(--rs);padding:10px 14px;color:var(--text);
+  width:100%;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);padding:10px 14px;color:var(--t);
   font-size:14px;resize:none;outline:none;font-family:inherit;
 }
-textarea.fi:focus{border-color:var(--golddim)}
+textarea.fi:focus{border-color:var(--gdim)}
 .row2{display:flex;gap:10px;margin-top:14px}
 
 /* ── DETAIL ── */
 .det-photo{position:relative;flex-shrink:0}
-.det-photo img{width:100%;max-height:42dvh;object-fit:cover;display:block}
+.det-photo img{width:100%;aspect-ratio:2/1;object-fit:cover;display:block}
 .det-back,.det-del{
   position:absolute;top:14px;width:40px;height:40px;border-radius:50%;
-  border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(8px);
+  border:none;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);
 }
 .det-back{left:14px;background:rgba(0,0,0,.55);color:#fff}
 .det-del{right:14px;background:rgba(192,57,43,.7);color:#fff}
@@ -211,44 +181,31 @@ textarea.fi:focus{border-color:var(--golddim)}
 .det-stars{display:flex;gap:4px;margin-bottom:14px}
 .det-star{font-size:19px;opacity:.2}
 .det-star.on{opacity:1}
-.det-notes{
-  background:var(--surf);border:1px solid var(--border);
-  border-radius:var(--rs);padding:13px;font-size:14px;color:var(--dim);line-height:1.6;
-}
+.det-notes{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);
+  padding:13px;font-size:14px;color:var(--dim);line-height:1.6}
 
 /* ── SETTINGS ── */
 .sec{margin-bottom:26px}
 .sec-t{font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;
   letter-spacing:.7px;margin-bottom:10px}
-.srow{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.sitem{display:flex;align-items:center;justify-content:space-between;
-  padding:13px 15px;border-bottom:1px solid var(--border);font-size:14px}
-.sitem:last-child{border-bottom:none}
-.sitem-l{color:var(--text)}
-.sitem-v{color:var(--dim);font-size:13px}
 .key-inp{
-  width:100%;background:var(--surf);border:1px solid var(--border);
-  border-radius:var(--rs);padding:13px 15px;color:var(--text);font-size:14px;
+  width:100%;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);padding:13px 15px;color:var(--t);font-size:14px;
   outline:none;font-family:monospace;
 }
-.key-inp:focus{border-color:var(--golddim)}
+.key-inp:focus{border-color:var(--gdim)}
 .hint{font-size:12px;color:var(--dim);margin-top:7px;line-height:1.5}
 .msel{
-  width:100%;background:var(--surf);border:1px solid var(--border);
-  border-radius:var(--rs);padding:13px 15px;color:var(--text);font-size:14px;
+  width:100%;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);padding:13px 15px;color:var(--t);font-size:14px;
   -webkit-appearance:none;cursor:pointer;outline:none;
 }
 .msel option{background:var(--bg)}
 .stat-row{display:flex;gap:10px}
-.scard{flex:1;background:var(--surf);border:1px solid var(--border);
+.scard{flex:1;background:var(--s);border:1px solid var(--b);
   border-radius:var(--rs);padding:14px;text-align:center}
 .scard-v{font-size:26px;font-weight:700;color:var(--gold)}
 .scard-l{font-size:11px;color:var(--dim);margin-top:3px}
-.demo-box{
-  background:rgba(200,134,10,.08);border:1px solid rgba(200,134,10,.25);
-  border-radius:var(--r);padding:14px;margin-bottom:10px;
-  font-size:13px;color:var(--dim);line-height:1.6;
-}
 
 /* ── BUTTONS ── */
 .btn{
@@ -260,31 +217,28 @@ textarea.fi:focus{border-color:var(--golddim)}
 .btn:active{transform:scale(.97)}
 .btn-p{background:var(--gold);color:#000;flex:1}
 .btn-p:hover{background:var(--gold2)}
-.btn-s{background:var(--surf2);color:var(--text);border:1px solid var(--border);flex:1}
-.btn-s:hover{border-color:var(--golddim)}
-.btn-d{background:var(--danger);color:#fff}
+.btn-s{background:var(--s2);color:var(--t);border:1px solid var(--b);flex:1}
+.btn-s:hover{border-color:var(--gdim)}
+.btn-d{background:var(--err);color:#fff}
 .fw{width:100%}
 .mb{margin-bottom:8px}
 
 /* ── TOAST ── */
 .toast{
   position:fixed;bottom:84px;left:50%;transform:translateX(-50%);
-  background:var(--surf);border:1px solid var(--border);color:var(--text);
+  background:var(--s);border:1px solid var(--b);color:var(--t);
   padding:11px 20px;border-radius:24px;font-size:14px;z-index:999;
   animation:slideup .3s ease,fadeout .3s ease 2.7s forwards;
   white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.5);pointer-events:none;
 }
 .toast.ok{border-color:var(--ok);color:var(--ok)}
-.toast.err{border-color:var(--danger);color:var(--danger)}
+.toast.err{border-color:var(--err);color:var(--err)}
 
-/* ── ANIMATIONS ── */
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideup{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%)}}
 @keyframes fadeout{to{opacity:0}}
-
 ::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-#file-inp{display:none}
+::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
 </style>
 </head>
 <body>
@@ -295,115 +249,145 @@ textarea.fi:focus{border-color:var(--golddim)}
   </div>
   <nav>
     <button class="nav-tab on" data-v="gallery"><span class="ic">🗂️</span>Catalogo</button>
-    <button class="nav-tab" data-v="cam"><span class="ic">📷</span>Scatta</button>
+    <button class="nav-tab" data-v="nuovo"><span class="ic">➕</span>Aggiungi</button>
     <button class="nav-tab" data-v="settings"><span class="ic">⚙️</span>Impostazioni</button>
   </nav>
 </header>
 
 <main>
-  <!-- GALLERY -->
-  <div class="view on" id="vgallery">
-    <div class="g-head">
-      <div><div class="g-label">catalogati</div><div class="g-count" id="g-count">0</div></div>
+
+<!-- ══ GALLERY ══ -->
+<div class="view on" id="vgallery">
+  <div class="g-head">
+    <div><div class="g-label">catalogati</div><div class="g-count" id="g-count">0</div></div>
+  </div>
+  <input class="search" id="search" type="search" placeholder="🔍  Cerca per nome o tipo…" autocomplete="off"/>
+  <div class="chips" id="chips"><div class="chip on" data-f="tutti">Tutti</div></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ══ NUOVO ══ -->
+<div class="view" id="vnuovo">
+
+  <div class="card-input">
+    <h2>Descrivi il croissant</h2>
+    <p>Seleziona le caratteristiche oppure scrivi liberamente. L'AI completerà la scheda.</p>
+
+    <!-- TIPO -->
+    <div class="fl">Tipo / farcitura</div>
+    <div class="kw-wrap" id="kw-tipo">
+      <span class="kw" data-g="tipo" data-v="al burro">al burro</span>
+      <span class="kw" data-g="tipo" data-v="al cioccolato">cioccolato</span>
+      <span class="kw" data-g="tipo" data-v="alle mandorle">mandorle</span>
+      <span class="kw" data-g="tipo" data-v="alla crema">crema</span>
+      <span class="kw" data-g="tipo" data-v="alla marmellata">marmellata</span>
+      <span class="kw" data-g="tipo" data-v="prosciutto e formaggio">prosciutto+formaggio</span>
+      <span class="kw" data-g="tipo" data-v="integrale">integrale</span>
+      <span class="kw" data-g="tipo" data-v="vegano">vegano</span>
+      <span class="kw" data-g="tipo" data-v="senza farcitura">vuoto</span>
     </div>
-    <input class="search" id="search" type="search" placeholder="🔍  Cerca…" autocomplete="off"/>
-    <div class="chips" id="chips"><div class="chip on" data-f="tutti">Tutti</div></div>
-    <div class="grid" id="grid"></div>
+
+    <!-- COTTURA -->
+    <div class="fl">Cottura</div>
+    <div class="kw-wrap" id="kw-cot">
+      <span class="kw" data-g="cottura" data-v="poco cotto">poco cotto</span>
+      <span class="kw" data-g="cottura" data-v="dorato">dorato</span>
+      <span class="kw" data-g="cottura" data-v="ben cotto">ben cotto</span>
+      <span class="kw" data-g="cottura" data-v="bruciacchiato">bruciacchiato</span>
+    </div>
+
+    <!-- TEXTURE -->
+    <div class="fl">Sfogliatura / texture</div>
+    <div class="kw-wrap" id="kw-tex">
+      <span class="kw" data-g="texture" data-v="molto sfogliato">molto sfogliato</span>
+      <span class="kw" data-g="texture" data-v="sfogliato">sfogliato</span>
+      <span class="kw" data-g="texture" data-v="compatto">compatto</span>
+      <span class="kw" data-g="texture" data-v="morbido">morbido</span>
+      <span class="kw" data-g="texture" data-v="croccante">croccante</span>
+      <span class="kw" data-g="texture" data-v="burroso">burroso</span>
+    </div>
+
+    <!-- FORMA -->
+    <div class="fl">Forma</div>
+    <div class="kw-wrap" id="kw-for">
+      <span class="kw" data-g="forma" data-v="a mezzaluna">a mezzaluna</span>
+      <span class="kw" data-g="forma" data-v="rettangolare">rettangolare</span>
+      <span class="kw" data-g="forma" data-v="rotondo">rotondo</span>
+      <span class="kw" data-g="forma" data-v="allungato">allungato</span>
+    </div>
+
+    <!-- FREE TEXT -->
+    <div class="fl">Altre note libere</div>
+    <textarea class="free-inp" id="free-txt" rows="2"
+      placeholder="es. glassa al miele, granella di zucchero, provenienza dalla Francia…"></textarea>
+
+    <!-- RIEPILOGO SELEZIONATI -->
+    <div class="fl" style="margin-top:14px">Selezione attuale</div>
+    <div class="selected-display empty" id="sel-display">nessuna parola chiave selezionata</div>
+
+    <button class="btn btn-p fw" id="btn-classifica" style="margin-top:4px">
+      ✨ Classifica con AI
+    </button>
   </div>
 
-  <!-- CAMERA -->
-  <div class="view" id="vcam">
-    <!-- camera / preview box -->
-    <div class="cam-box" id="cam-box">
-      <video id="vid" autoplay playsinline muted></video>
-      <img id="cap-img" alt="foto"/>
-      <div class="cam-frame" id="cam-frame"><div class="frame-sq"></div></div>
-      <div class="cam-msg" id="cam-msg">Inquadra il croissant</div>
-      <!-- shown when camera fails -->
-      <div class="cam-err" id="cam-err">
-        <span class="eic">📷</span>
-        <p>Fotocamera non disponibile.<br>Usa <strong>🎭 Demo</strong> qui sotto o carica una foto dalla galleria.</p>
-      </div>
-    </div>
+  <!-- DEMO NOTE -->
+  <div style="background:rgba(200,134,10,.07);border:1px solid rgba(200,134,10,.2);
+    border-radius:var(--rs);padding:12px 14px;font-size:12px;color:var(--dim);line-height:1.6">
+    🎭 <strong style="color:var(--t)">Senza chiave API</strong>: l'app classifica in modalità demo
+    in base alle parole chiave selezionate. Con la chiave API usa Claude per una scheda completa.
+  </div>
+</div>
 
-    <!-- shutter bar (visible when streaming) -->
-    <div class="bar" id="bar-shutter">
-      <button class="icon-btn" id="btn-flip" title="Cambia fotocamera">🔄</button>
-      <button class="shutter" id="btn-shutter">📷</button>
-      <label class="icon-btn" title="Carica foto">🖼️<input type="file" id="file-inp" accept="image/*" hidden/></label>
-    </div>
-
-    <!-- action bar after capture -->
-    <div class="act-bar" id="bar-act">
-      <button class="btn btn-s" id="btn-retake">↩ Riprova</button>
-      <button class="btn btn-p" id="btn-analyze">✨ Analizza</button>
-    </div>
-
-    <!-- demo strip — always visible -->
-    <div class="demo-strip">
-      <p><strong>🎭 Modalità Demo</strong><br>Prova senza fotocamera né chiave API</p>
-      <button id="btn-demo">Demo rapida</button>
+<!-- ══ SETTINGS ══ -->
+<div class="view" id="vsettings">
+  <div class="sec">
+    <div class="sec-t">Statistiche</div>
+    <div class="stat-row">
+      <div class="scard"><div class="scard-v" id="st-tot">0</div><div class="scard-l">Totale</div></div>
+      <div class="scard"><div class="scard-v" id="st-cat">0</div><div class="scard-l">Categorie</div></div>
+      <div class="scard"><div class="scard-v" id="st-avg">–</div><div class="scard-l">Voto medio</div></div>
     </div>
   </div>
 
-  <!-- SETTINGS -->
-  <div class="view" id="vsettings">
-    <div class="sec">
-      <div class="sec-t">Statistiche</div>
-      <div class="stat-row">
-        <div class="scard"><div class="scard-v" id="st-tot">0</div><div class="scard-l">Totale</div></div>
-        <div class="scard"><div class="scard-v" id="st-cat">0</div><div class="scard-l">Categorie</div></div>
-        <div class="scard"><div class="scard-v" id="st-avg">–</div><div class="scard-l">Voto medio</div></div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-t">🎭 Demo — nessuna API richiesta</div>
-      <div class="demo-box">
-        Senza chiave API l'app funziona in modalità demo: analisi simulata, immagini generate automaticamente.
-        Puoi esplorare tutto il catalogo, filtri, dettaglio, stelle.
-      </div>
-      <button class="btn btn-s fw mb" id="btn-load-all">📦 Popola catalogo con 6 esempi</button>
-      <button class="btn btn-s fw" id="btn-load-one">🥐 Aggiungi 1 croissant demo</button>
-    </div>
-
-    <div class="sec">
-      <div class="sec-t">Chiave API Anthropic</div>
-      <input class="key-inp" id="key-inp" type="password" placeholder="sk-ant-api03-…" autocomplete="off"/>
-      <p class="hint">Salvata solo sul tuo dispositivo · <strong>console.anthropic.com</strong></p>
-      <br>
-      <button class="btn btn-p fw" id="btn-save-key">Salva chiave</button>
-    </div>
-
-    <div class="sec">
-      <div class="sec-t">Modello AI</div>
-      <select class="msel" id="model-sel">
-        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — veloce, economico</option>
-        <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 — bilanciato</option>
-        <option value="claude-opus-4-7">Claude Opus 4.7 — massima qualità</option>
-      </select>
-    </div>
-
-    <div class="sec">
-      <div class="sec-t">Dati</div>
-      <button class="btn btn-s fw mb" id="btn-export">📤 Esporta JSON</button>
-      <button class="btn btn-d fw" id="btn-clear">🗑️ Cancella tutto il catalogo</button>
-    </div>
+  <div class="sec">
+    <div class="sec-t">Chiave API Anthropic</div>
+    <input class="key-inp" id="key-inp" type="password" placeholder="sk-ant-api03-…" autocomplete="off"/>
+    <p class="hint">Salvata solo sul dispositivo · <strong>console.anthropic.com</strong></p>
+    <br>
+    <button class="btn btn-p fw" id="btn-save-key">Salva chiave</button>
   </div>
+
+  <div class="sec">
+    <div class="sec-t">Modello AI</div>
+    <select class="msel" id="model-sel">
+      <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — veloce, economico</option>
+      <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 — bilanciato</option>
+      <option value="claude-opus-4-7">Claude Opus 4.7 — massima qualità</option>
+    </select>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">Dati</div>
+    <button class="btn btn-s fw mb" id="btn-export">📤 Esporta JSON</button>
+    <button class="btn btn-d fw" id="btn-clear">🗑️ Cancella tutto il catalogo</button>
+  </div>
+</div>
+
 </main>
 
-<!-- ANALYSIS OVERLAY -->
+<!-- OVERLAY analisi -->
 <div class="ov" id="ov">
   <div class="spin"></div>
-  <div class="ov-title" id="ov-title">Analisi in corso…</div>
+  <div class="ov-title" id="ov-title">Classificazione in corso…</div>
   <div class="ov-sub" id="ov-sub">Un momento…</div>
 </div>
 
 <!-- RESULT PANEL -->
 <div class="panel" id="result-panel">
-  <img class="panel-photo" id="res-photo" alt=""/>
+  <img class="panel-img" id="res-photo" alt=""/>
   <div class="panel-body">
-    <div class="ai-tag">✨ Analizzato con AI</div>
+    <div class="ai-tag" id="res-tag">✨ Classificato con AI</div>
+
     <input class="name-inp" id="res-name" type="text" placeholder="Nome del croissant…"/>
 
     <div class="fl">Categoria</div>
@@ -412,8 +396,9 @@ textarea.fi:focus{border-color:var(--golddim)}
       <div class="fchip" data-v="Integrale">Integrale</div>
       <div class="fchip" data-v="Cioccolato">Cioccolato</div>
       <div class="fchip" data-v="Mandorle">Mandorle</div>
+      <div class="fchip" data-v="Crema">Crema</div>
+      <div class="fchip" data-v="Marmellata">Marmellata</div>
       <div class="fchip" data-v="Salato">Salato</div>
-      <div class="fchip" data-v="Frutta">Frutta</div>
       <div class="fchip" data-v="Vegano">Vegano</div>
       <div class="fchip" data-v="Altro">Altro</div>
     </div>
@@ -433,7 +418,7 @@ textarea.fi:focus{border-color:var(--golddim)}
     </div>
 
     <div class="fl">Note personali</div>
-    <textarea class="fi mb" id="res-notes" rows="2" placeholder="Dove l'hai trovato? Cosa ti ha colpito?"></textarea>
+    <textarea class="fi mb" id="res-notes" rows="2" placeholder="Dove l'hai assaggiato? Cosa ti ha colpito?"></textarea>
 
     <div class="fl">Osservazioni AI</div>
     <textarea class="fi" id="res-ai" rows="2" readonly style="opacity:.65"></textarea>
@@ -463,215 +448,200 @@ textarea.fi:focus{border-color:var(--golddim)}
 </div>
 
 <script>
+// ─── HELPERS ───────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
 // ─── DB ────────────────────────────────────────────────
 const DB = (() => {
   let _db;
   const open = () => new Promise((res, rej) => {
     if (_db) return res(_db);
-    const r = indexedDB.open('CroissantCatalog', 1);
-    r.onupgradeneeded = e => {
-      const s = e.target.result.createObjectStore('items', { keyPath: 'id' });
-      s.createIndex('cat', 'category');
-    };
+    const r = indexedDB.open('CroissantCatalog', 2);
+    r.onupgradeneeded = e => e.target.result.createObjectStore('items', { keyPath: 'id' });
     r.onsuccess = e => { _db = e.target.result; res(_db); };
     r.onerror = () => rej(r.error);
   });
   const tx = async m => (await open()).transaction('items', m).objectStore('items');
   const wrap = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
   return {
-    getAll: async () => { const s = await tx('readonly'); return (await wrap(s.getAll())).sort((a,b) => b.id - a.id); },
+    getAll: async () => { const s = await tx('readonly'); return (await wrap(s.getAll())).sort((a,b)=>b.id-a.id); },
     add:    async item => { const s = await tx('readwrite'); return wrap(s.add(item)); },
     del:    async id   => { const s = await tx('readwrite'); return wrap(s.delete(id)); },
     clear:  async ()   => { const s = await tx('readwrite'); return wrap(s.clear()); },
   };
 })();
 
-// ─── STATE ─────────────────────────────────────────────
-let items = [], filter = 'tutti', search = '', rating = 0, selCat = '', detId = null;
-let captured = null, stream = null, facing = 'environment';
-const DEMO_PH = '__demo__';
-
 // ─── SETTINGS ──────────────────────────────────────────
 const S = {
-  get key()   { return localStorage.getItem('cc_key') || ''; },
-  set key(v)  { localStorage.setItem('cc_key', v); },
-  get model() { return localStorage.getItem('cc_model') || 'claude-sonnet-4-6'; },
-  set model(v){ localStorage.setItem('cc_model', v); },
+  get key()    { return localStorage.getItem('cc_key') || ''; },
+  set key(v)   { localStorage.setItem('cc_key', v); },
+  get model()  { return localStorage.getItem('cc_model') || 'claude-sonnet-4-6'; },
+  set model(v) { localStorage.setItem('cc_model', v); },
 };
 
-// ─── DEMO DATA ─────────────────────────────────────────
-const DEMOS = [
-  { nome:'Croissant al burro classico', categoria:'Classico', farcitura:'Nessuna',
-    cottura:'Dorata', forma:'A mezzaluna', sfogliatura:'Molto sfogliato',
-    note:'Sfogliatura fine e regolare, colore ambrato uniforme' },
-  { nome:'Croissant al cioccolato fondente', categoria:'Cioccolato', farcitura:'Crema fondente 70%',
-    cottura:'Dorata', forma:'Rettangolare', sfogliatura:'Sfogliato',
-    note:'Farcitura abbondante, ganache visibile ai lati' },
-  { nome:'Croissant alle mandorle', categoria:'Mandorle', farcitura:'Frangipane alle mandorle',
-    cottura:'Scura', forma:'A mezzaluna', sfogliatura:'Compatto',
-    note:'Granella di mandorle in superficie, zucchero a velo' },
-  { nome:'Croissant prosciutto e brie', categoria:'Salato', farcitura:'Prosciutto cotto + brie',
-    cottura:'Dorata', forma:'Dritta', sfogliatura:'Sfogliato',
-    note:'Formaggio fuso visibile ai bordi, impasto leggermente salato' },
-  { nome:'Croissant integrale ai semi', categoria:'Integrale', farcitura:'Nessuna',
-    cottura:'Scura', forma:'A mezzaluna', sfogliatura:'Molto sfogliato',
-    note:'Semi di sesamo in superficie, aroma tostato intenso' },
-  { nome:'Croissant alla fragola', categoria:'Frutta', farcitura:'Confettura di fragole artigianale',
-    cottura:'Chiara', forma:'A mezzaluna', sfogliatura:'Sfogliato',
-    note:'Glassa lucida in superficie, farcitura rosa visibile' },
-];
-let di = 0;
+// ─── STATE ─────────────────────────────────────────────
+let items = [], filter = 'tutti', search = '', rating = 0, selCat = '', detId = null;
 
-function makeDemoImg(d) {
+// ─── CANVAS IMAGE GEN ──────────────────────────────────
+function makeImg(categoria, nome) {
   const C = document.createElement('canvas');
-  C.width = C.height = 600;
+  C.width = 800; C.height = 400;
   const ctx = C.getContext('2d');
-  const pal = { Classico:['#c8860a','#7a5000'], Cioccolato:['#5c3317','#2e1508'],
-    Mandorle:['#b8860b','#6a4e00'], Salato:['#6b8e5e','#3a5c32'],
-    Integrale:['#8b7355','#4a3818'], Frutta:['#c0392b','#7a1810'],
-    Vegano:['#5f9e6e','#2e6b45'], Altro:['#666','#444'] };
-  const [c1,c2] = pal[d.categoria] || pal.Altro;
-  const g = ctx.createRadialGradient(300,270,40,300,300,340);
-  g.addColorStop(0,c1); g.addColorStop(1,c2);
-  ctx.fillStyle = g; ctx.fillRect(0,0,600,600);
-  // subtle dots
-  for (let i=0;i<2000;i++) {
-    ctx.fillStyle = `rgba(255,255,255,${Math.random()*.05})`;
-    ctx.fillRect(Math.random()*600,Math.random()*600,2,2);
+
+  const pal = {
+    Classico:   ['#c8860a','#7a5000'], Cioccolato: ['#5c3317','#2e1508'],
+    Mandorle:   ['#b8860b','#6a4e00'], Crema:      ['#d4a84b','#9a6e10'],
+    Marmellata: ['#c0392b','#7a1810'], Salato:     ['#6b8e5e','#3a5c32'],
+    Integrale:  ['#8b7355','#4a3818'], Vegano:     ['#5f9e6e','#2e6b45'],
+    Altro:      ['#666','#444'],
+  };
+  const [c1, c2] = pal[categoria] || pal.Altro;
+
+  // gradient bg
+  const g = ctx.createLinearGradient(0, 0, 800, 400);
+  g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 800, 400);
+
+  // dots
+  for (let i=0;i<1500;i++){
+    ctx.fillStyle = `rgba(255,255,255,${Math.random()*.04})`;
+    ctx.fillRect(Math.random()*800, Math.random()*400, 2, 2);
   }
-  ctx.font='230px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('🥐',300,270);
-  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(0,500,600,100);
-  ctx.fillStyle='#fff'; ctx.font='bold 28px -apple-system,sans-serif';
-  ctx.fillText(d.nome,300,538);
-  ctx.fillStyle='rgba(255,255,255,.65)'; ctx.font='22px -apple-system,sans-serif';
-  ctx.fillText(`${d.categoria} · ${d.cottura}`,300,574);
-  return C.toDataURL('image/jpeg',.85);
+
+  // emoji
+  ctx.font = '200px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('🥐', 250, 200);
+
+  // right text block
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(430, 0, 370, 400);
+  ctx.fillStyle = 'rgba(200,134,10,.9)'; ctx.font = 'bold 18px -apple-system,sans-serif';
+  ctx.fillText(categoria.toUpperCase(), 615, 150);
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 26px -apple-system,sans-serif';
+  // wrap long name
+  const words = nome.split(' ');
+  let line = '', y = 210;
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (ctx.measureText(test).width > 330 && line) {
+      ctx.fillText(line, 615, y); line = w; y += 32;
+    } else line = test;
+  }
+  ctx.fillText(line, 615, y);
+
+  return C.toDataURL('image/jpeg', .85);
 }
 
-async function demoAnalyze() {
-  const d = DEMOS[di % DEMOS.length]; di++;
-  await new Promise(r => setTimeout(r,1200));
-  return d;
+// ─── KEYWORD SELECTION ─────────────────────────────────
+let selected = {}; // { tipo:'al cioccolato', cottura:'dorato', ... }
+
+function updateSelDisplay() {
+  const vals = Object.values(selected).filter(Boolean);
+  const d = $('sel-display');
+  if (!vals.length) {
+    d.className = 'selected-display empty';
+    d.textContent = 'nessuna parola chiave selezionata';
+  } else {
+    d.className = 'selected-display';
+    d.innerHTML = vals.map(v => `<span style="background:rgba(200,134,10,.15);border:1px solid rgba(200,134,10,.4);
+      border-radius:12px;padding:3px 10px;font-size:12px;">${v}</span>`).join('');
+  }
 }
 
-// ─── CLAUDE API ────────────────────────────────────────
-async function callClaude(b64) {
-  const mt = b64.startsWith('/9j') ? 'image/jpeg' : 'image/png';
-  const data = b64.includes(',') ? b64.split(',')[1] : b64;
+function buildKeywords() {
+  const parts = Object.values(selected).filter(Boolean);
+  const free = $('free-txt').value.trim();
+  if (free) parts.push(free);
+  return parts.join(', ');
+}
+
+// ─── DEMO CLASSIFICATION ───────────────────────────────
+function demoClassify(keywords) {
+  const k = keywords.toLowerCase();
+  let categoria = 'Classico';
+  if (k.includes('cioccolato') || k.includes('fondente') || k.includes('cacao')) categoria = 'Cioccolato';
+  else if (k.includes('mandorle') || k.includes('frangipane')) categoria = 'Mandorle';
+  else if (k.includes('crema') || k.includes('pasticcera') || k.includes('custard')) categoria = 'Crema';
+  else if (k.includes('marmellata') || k.includes('fragola') || k.includes('albicocca') || k.includes('frutta')) categoria = 'Marmellata';
+  else if (k.includes('prosciutto') || k.includes('formaggio') || k.includes('salato') || k.includes('brie')) categoria = 'Salato';
+  else if (k.includes('integrale') || k.includes('semi') || k.includes('crusca')) categoria = 'Integrale';
+  else if (k.includes('vegano') || k.includes('vegan')) categoria = 'Vegano';
+
+  const cottura_map = { 'poco cotto':'Chiara', 'dorato':'Dorata', 'ben cotto':'Scura', 'bruciacchiato':'Molto scura' };
+  const cottura = Object.entries(cottura_map).find(([kw])=>k.includes(kw))?.[1] || 'Dorata';
+
+  const forma_map = { 'mezzaluna':'A mezzaluna', 'rettangolare':'Rettangolare', 'rotondo':'Rotondo', 'allungato':'Allungato' };
+  const forma = Object.entries(forma_map).find(([kw])=>k.includes(kw))?.[1] || 'A mezzaluna';
+
+  const sfogl_map = { 'molto sfogliato':'Molto sfogliato', 'compatto':'Compatto', 'morbido':'Morbido' };
+  const sfogliatura = Object.entries(sfogl_map).find(([kw])=>k.includes(kw))?.[1] ||
+    (k.includes('sfogliato') ? 'Sfogliato' : 'Sfogliato');
+
+  const farciture = { Cioccolato:'Crema al cioccolato', Mandorle:'Frangipane alle mandorle',
+    Crema:'Crema pasticcera', Marmellata:'Confettura artigianale',
+    Salato:'Prosciutto e formaggio', Classico:'Nessuna', Integrale:'Nessuna', Vegano:'Nessuna', Altro:'Nessuna' };
+
+  return {
+    nome: `Croissant ${categoria !== 'Classico' ? categoria.toLowerCase() : 'al burro classico'}`,
+    categoria, farcitura: farciture[categoria] || 'Nessuna',
+    cottura, forma, sfogliatura,
+    note: `Classificato da parole chiave: ${keywords.slice(0,80)}`
+  };
+}
+
+// ─── CLAUDE API (testo) ────────────────────────────────
+async function callClaudeText(keywords) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST',
-    headers:{
+    method: 'POST',
+    headers: {
       'x-api-key': S.key,
-      'anthropic-version':'2023-06-01',
-      'content-type':'application/json',
-      'anthropic-dangerous-direct-browser-calls':'true',
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+      'anthropic-dangerous-direct-browser-calls': 'true',
     },
     body: JSON.stringify({
-      model: S.model, max_tokens: 512,
-      messages:[{ role:'user', content:[
-        { type:'image', source:{ type:'base64', media_type:mt, data } },
-        { type:'text', text:`Sei un esperto di pasticceria. Analizza la foto e rispondi SOLO con JSON valido, senza markdown:
-{"nome":"nome breve","categoria":"Classico|Integrale|Cioccolato|Mandorle|Salato|Frutta|Vegano|Altro",
+      model: S.model, max_tokens: 400,
+      messages: [{ role: 'user', content:
+        `Sei un esperto di pasticceria. L'utente descrive un croissant con queste parole chiave: "${keywords}"
+
+Rispondi SOLO con JSON valido, senza markdown:
+{"nome":"nome descrittivo breve","categoria":"Classico|Integrale|Cioccolato|Mandorle|Crema|Marmellata|Salato|Vegano|Altro",
 "farcitura":"descrizione o Nessuna","cottura":"Chiara|Dorata|Scura|Molto scura",
-"forma":"A mezzaluna|Rettangolare|Dritta|Arrotolata|Altro",
-"sfogliatura":"Molto sfogliato|Sfogliato|Compatto|Non visibile",
-"note":"osservazione specifica max 80 caratteri"}
-Se non è un croissant: {"errore":"Non è un croissant"}` }
-      ]}]
+"forma":"A mezzaluna|Rettangolare|Rotondo|Allungato|Altro",
+"sfogliatura":"Molto sfogliato|Sfogliato|Compatto|Morbido",
+"note":"breve osservazione professionale max 80 caratteri"}`
+      }]
     })
   });
-  if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message||`Errore ${r.status}`); }
+  if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message || `Errore ${r.status}`); }
   const js = await r.json();
   const txt = js.content[0].text.trim();
-  let parsed;
-  try { parsed = JSON.parse(txt); } catch {
-    const m = txt.match(/\{[\s\S]*\}/);
-    if (m) parsed = JSON.parse(m[0]); else throw new Error('Risposta AI non valida');
-  }
-  if (parsed.errore) throw new Error(parsed.errore);
-  return parsed;
+  try { return JSON.parse(txt); }
+  catch { const m = txt.match(/\{[\s\S]*\}/); if (m) return JSON.parse(m[0]); throw new Error('Risposta non valida'); }
 }
 
-// ─── IMAGE UTILS ───────────────────────────────────────
-const resize = (b64, w=1024) => new Promise(res => {
-  const img = new Image(); img.onload = () => {
-    const sc = Math.min(1, w/img.width);
-    const c = document.createElement('canvas');
-    c.width = img.width*sc; c.height = img.height*sc;
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-    res(c.toDataURL('image/jpeg',.85));
-  }; img.src = b64;
-});
-const thumb = (b64, sz=280) => new Promise(res => {
-  const img = new Image(); img.onload = () => {
-    const side = Math.min(img.width,img.height);
-    const c = document.createElement('canvas');
-    c.width = c.height = sz;
-    c.getContext('2d').drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,sz,sz);
-    res(c.toDataURL('image/jpeg',.72));
-  }; img.src = b64;
-});
+// ─── CLASSIFY ──────────────────────────────────────────
+async function classify() {
+  const keywords = buildKeywords();
+  if (!keywords) { toast('Seleziona almeno una parola chiave', 'err'); return; }
 
-// ─── CAMERA ────────────────────────────────────────────
-function stopCam() { if (stream) { stream.getTracks().forEach(t=>t.stop()); stream=null; } }
-
-async function startCam() {
-  stopCam();
-  const vid = $('vid'), errDiv = $('cam-err'), frame = $('cam-frame'), msg = $('cam-msg');
-  vid.style.display='none'; $('cap-img').style.display='none';
-  errDiv.style.display='none'; frame.style.display='flex';
-  msg.style.display='block'; $('bar-shutter').style.display='flex';
-  $('bar-act').style.display='none'; captured=null;
-
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:facing, width:{ideal:1280} }, audio:false });
-    vid.srcObject = stream; vid.style.display='block';
-  } catch {
-    vid.style.display='none'; frame.style.display='none';
-    msg.style.display='none'; errDiv.style.display='flex';
-    $('bar-shutter').style.display='none';
-  }
-}
-
-function capture() {
-  const vid = $('vid');
-  const c = document.createElement('canvas');
-  c.width = vid.videoWidth; c.height = vid.videoHeight;
-  c.getContext('2d').drawImage(vid,0,0);
-  showCaptured(c.toDataURL('image/jpeg',.9));
-}
-
-function showCaptured(b64) {
-  stopCam();
-  $('vid').style.display='none';
-  $('cap-img').src = b64; $('cap-img').style.display='block';
-  $('cam-frame').style.display='none'; $('cam-msg').style.display='none';
-  $('cam-err').style.display='none';
-  $('bar-shutter').style.display='none';
-  $('bar-act').style.display='flex';
-  captured = b64;
-}
-
-// ─── ANALYSIS ──────────────────────────────────────────
-async function analyze() {
-  if (!captured) return;
   const ov = $('ov'); ov.classList.add('on');
+  let result;
 
   try {
-    let analysis;
-    if (!S.key) {
-      $('ov-title').textContent = 'Analisi demo in corso…';
-      $('ov-sub').textContent = '🎭 Dati simulati — nessuna API usata';
-      analysis = await demoAnalyze();
-      if (captured === DEMO_PH) captured = makeDemoImg(analysis);
+    if (S.key) {
+      $('ov-title').textContent = 'Classificazione AI…';
+      $('ov-sub').textContent = 'Claude elabora le parole chiave 🥐';
+      result = await callClaudeText(keywords);
+      $('res-tag').textContent = '✨ Classificato con Claude AI';
     } else {
-      $('ov-title').textContent = 'Analisi AI in corso…';
-      $('ov-sub').textContent = 'Claude esamina il croissant 🥐';
-      analysis = await callClaude(captured);
+      $('ov-title').textContent = 'Classificazione demo…';
+      $('ov-sub').textContent = '🎭 Modalità demo — nessuna API usata';
+      await new Promise(r => setTimeout(r, 900));
+      result = demoClassify(keywords);
+      $('res-tag').textContent = '🎭 Classificato in modalità demo';
     }
     ov.classList.remove('on');
-    openResult(analysis);
+    openResult(result);
   } catch(e) {
     ov.classList.remove('on');
     toast(e.message, 'err');
@@ -679,23 +649,31 @@ async function analyze() {
 }
 
 // ─── RESULT PANEL ──────────────────────────────────────
+let pendingImg = null;
+
 function openResult(a) {
-  rating=0; selCat = a.categoria||'Classico';
-  $('res-photo').src = captured;
-  $('res-name').value = a.nome||'';
-  $('r-far').textContent = a.farcitura||'–';
-  $('r-cot').textContent = a.cottura||'–';
-  $('r-for').textContent = a.forma||'–';
-  $('r-sfo').textContent = a.sfogliatura||'–';
-  $('res-ai').value = a.note||'';
+  rating = 0; selCat = a.categoria || 'Classico';
+  pendingImg = makeImg(selCat, a.nome || 'Croissant');
+
+  $('res-photo').src = pendingImg;
+  $('res-name').value = a.nome || '';
+  $('r-far').textContent = a.farcitura || '–';
+  $('r-cot').textContent = a.cottura || '–';
+  $('r-for').textContent = a.forma || '–';
+  $('r-sfo').textContent = a.sfogliatura || '–';
+  $('res-ai').value = a.note || '';
   $('res-notes').value = '';
   setStars(0);
+
   document.querySelectorAll('#res-cats .fchip').forEach(c => {
     c.classList.toggle('on', c.dataset.v === selCat);
     c.onclick = () => {
       selCat = c.dataset.v;
-      document.querySelectorAll('#res-cats .fchip').forEach(x=>x.classList.remove('on'));
+      document.querySelectorAll('#res-cats .fchip').forEach(x => x.classList.remove('on'));
       c.classList.add('on');
+      // aggiorna immagine se cambia categoria
+      pendingImg = makeImg(selCat, $('res-name').value || 'Croissant');
+      $('res-photo').src = pendingImg;
     };
   });
   $('result-panel').classList.add('on');
@@ -703,45 +681,57 @@ function openResult(a) {
 
 function setStars(n) {
   rating = n;
-  document.querySelectorAll('#stars .star').forEach((s,i)=>s.classList.toggle('on',i<n));
+  document.querySelectorAll('#stars .star').forEach((s,i) => s.classList.toggle('on', i < n));
 }
 
 async function saveResult() {
   const name = $('res-name').value.trim();
-  if (!name) { toast('Inserisci un nome','err'); return; }
-  const [photo, thumbnail] = await Promise.all([resize(captured,1024), thumb(captured,280)]);
+  if (!name) { toast('Inserisci un nome', 'err'); return; }
+  const photo = makeImg(selCat, name); // final image with correct name
   await DB.add({
     id: Date.now(),
-    name, category: selCat, photo, thumbnail,
-    rating: rating||null,
+    name, category: selCat, photo,
+    rating: rating || null,
     notes: $('res-notes').value.trim(),
-    analysis: { farcitura:$('r-far').textContent, cottura:$('r-cot').textContent,
-                forma:$('r-for').textContent, sfogliatura:$('r-sfo').textContent,
-                note:$('res-ai').value },
-    date: new Date().toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})
+    keywords: buildKeywords(),
+    analysis: {
+      farcitura: $('r-far').textContent, cottura: $('r-cot').textContent,
+      forma: $('r-for').textContent, sfogliatura: $('r-sfo').textContent,
+      note: $('res-ai').value
+    },
+    date: new Date().toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
   });
   $('result-panel').classList.remove('on');
+  resetForm();
   await loadGallery();
-  toast('Salvato! 🥐','ok');
+  toast('Salvato! 🥐', 'ok');
   showView('gallery');
+}
+
+function resetForm() {
+  selected = {};
+  document.querySelectorAll('.kw').forEach(k => k.classList.remove('on'));
+  $('free-txt').value = '';
+  updateSelDisplay();
 }
 
 // ─── DETAIL ────────────────────────────────────────────
 function openDetail(id) {
-  const it = items.find(i=>i.id===id); if (!it) return;
+  const it = items.find(i => i.id === id); if (!it) return;
   detId = id;
   $('det-img').src = it.photo;
   $('det-title').textContent = it.name;
-  $('det-date').textContent = it.date||'';
-  $('det-stars').innerHTML = [1,2,3,4,5].map(n=>
-    `<span class="det-star${it.rating&&n<=it.rating?' on':''}">⭐</span>`).join('');
-  const a = it.analysis||{};
+  $('det-date').textContent = it.date || '';
+  $('det-stars').innerHTML = [1,2,3,4,5].map(n =>
+    `<span class="det-star${it.rating && n<=it.rating?' on':''}">⭐</span>`).join('');
+  const a = it.analysis || {};
   $('det-grid').innerHTML = [['Categoria',it.category],['Farcitura',a.farcitura],
     ['Cottura',a.cottura],['Forma',a.forma],['Sfogliatura',a.sfogliatura]]
     .filter(([,v])=>v&&v!=='–').map(([k,v])=>
     `<div class="icard"><div class="icard-l">${k}</div><div class="icard-v">${v}</div></div>`).join('');
-  const parts=[];
-  if (it.notes) parts.push(`<span style="color:var(--text)">${it.notes}</span>`);
+  const parts = [];
+  if (it.notes) parts.push(`<span style="color:var(--t)">${it.notes}</span>`);
+  if (it.keywords) parts.push(`<span>🔑 ${it.keywords}</span>`);
   if (a.note) parts.push(`<span>AI: ${a.note}</span>`);
   $('det-notes').innerHTML = parts.join('<br>') || '<span style="opacity:.4">Nessuna nota</span>';
   $('det-panel').classList.add('on');
@@ -750,38 +740,38 @@ function openDetail(id) {
 // ─── GALLERY ───────────────────────────────────────────
 async function loadGallery() {
   items = await DB.getAll();
-  render(); updateChips(); updateStats();
+  renderGallery(); updateChips(); updateStats();
 }
 
-function render() {
+function renderGallery() {
   const q = search.toLowerCase();
   const list = items.filter(i =>
-    (filter==='tutti'||i.category===filter) &&
+    (filter==='tutti' || i.category===filter) &&
     (!q || i.name.toLowerCase().includes(q) || (i.category||'').toLowerCase().includes(q))
   );
   $('g-count').textContent = list.length;
-  $('grid').innerHTML = list.length===0
+  $('grid').innerHTML = list.length === 0
     ? `<div class="empty"><span class="ei">${items.length?'🔍':'🥐'}</span>
        <h3>${items.length?'Nessun risultato':'Nessun croissant ancora'}</h3>
-       <p>${items.length?'Prova con un\'altra ricerca':'Vai in Scatta e premi Demo rapida!'}</p></div>`
-    : list.map(i=>`<div class="card" data-id="${i.id}">
-        <img src="${i.thumbnail||i.photo}" alt="${i.name}" loading="lazy"/>
+       <p>${items.length?'Prova un\'altra ricerca':'Vai in Aggiungi e inserisci le parole chiave!'}</p></div>`
+    : list.map(i => `<div class="card" data-id="${i.id}">
+        <img class="card-img" src="${i.photo}" alt="${i.name}" loading="lazy"/>
         <div class="card-b">
           <div class="card-n">${i.name}</div>
-          <div class="card-s">${i.category||''}${i.rating?'  '+'⭐'.repeat(i.rating):''}</div>
+          <div class="card-s">${i.category||''}${i.rating ? '  '+'⭐'.repeat(i.rating) : ''}</div>
         </div></div>`).join('');
-  $('grid').querySelectorAll('.card').forEach(c=>
-    c.addEventListener('click',()=>openDetail(+c.dataset.id)));
+  $('grid').querySelectorAll('.card').forEach(c =>
+    c.addEventListener('click', () => openDetail(+c.dataset.id)));
 }
 
 function updateChips() {
   const cats = [...new Set(items.map(i=>i.category).filter(Boolean))];
-  $('chips').innerHTML = `<div class="chip${filter==='tutti'?' on':''}" data-f="tutti">Tutti</div>`+
+  $('chips').innerHTML = `<div class="chip${filter==='tutti'?' on':''}" data-f="tutti">Tutti</div>` +
     cats.map(c=>`<div class="chip${filter===c?' on':''}" data-f="${c}">${c}</div>`).join('');
-  $('chips').querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
-    filter=c.dataset.f;
+  $('chips').querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    filter = c.dataset.f;
     $('chips').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
-    c.classList.add('on'); render();
+    c.classList.add('on'); renderGallery();
   }));
 }
 
@@ -789,15 +779,14 @@ function updateStats() {
   const rated = items.filter(i=>i.rating);
   $('st-tot').textContent = items.length;
   $('st-cat').textContent = new Set(items.map(i=>i.category).filter(Boolean)).size;
-  $('st-avg').textContent = rated.length?(rated.reduce((s,i)=>s+i.rating,0)/rated.length).toFixed(1):'–';
+  $('st-avg').textContent = rated.length ? (rated.reduce((s,i)=>s+i.rating,0)/rated.length).toFixed(1) : '–';
 }
 
 // ─── NAV ───────────────────────────────────────────────
 function showView(v) {
-  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.toggle('on', b.dataset.v===v));
   $(`v${v}`).classList.add('on');
-  if (v==='cam') startCam(); else stopCam();
   if (v==='gallery') loadGallery();
   if (v==='settings') updateStats();
 }
@@ -806,112 +795,79 @@ function showView(v) {
 function toast(msg, type='') {
   const t = document.createElement('div');
   t.className = `toast ${type}`; t.textContent = msg;
-  document.body.appendChild(t); setTimeout(()=>t.remove(),3200);
-}
-
-// ─── UTILS ─────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-
-async function addDemoItem(d, rng=false) {
-  const photo = makeDemoImg(d);
-  const [p,th] = await Promise.all([resize(photo,1024),thumb(photo,280)]);
-  await DB.add({
-    id: Date.now()+Math.random(),
-    name:d.nome, category:d.categoria, photo:p, thumbnail:th,
-    rating: rng ? Math.ceil(Math.random()*2)+3 : null,
-    notes:'',
-    analysis:{ farcitura:d.farcitura, cottura:d.cottura,
-               forma:d.forma, sfogliatura:d.sfogliatura, note:d.note },
-    date: rng
-      ? new Date(Date.now()-Math.random()*30*864e5).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})
-      : new Date().toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})
-  });
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3200);
 }
 
 // ─── INIT ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+
   // NAV
-  document.querySelectorAll('.nav-tab').forEach(b=>
-    b.addEventListener('click',()=>showView(b.dataset.v)));
+  document.querySelectorAll('.nav-tab').forEach(b =>
+    b.addEventListener('click', () => showView(b.dataset.v)));
 
-  // CAMERA
-  $('btn-shutter').addEventListener('click', capture);
-  $('btn-flip').addEventListener('click',()=>{ facing=facing==='environment'?'user':'environment'; startCam(); });
-  $('file-inp').addEventListener('change', e=>{
-    const f=e.target.files[0]; if(!f)return;
-    const r=new FileReader(); r.onload=ev=>showCaptured(ev.target.result); r.readAsDataURL(f);
-    e.target.value='';
-  });
-  $('btn-retake').addEventListener('click', startCam);
-  $('btn-analyze').addEventListener('click', analyze);
+  // KEYWORD CHIPS
+  document.querySelectorAll('.kw').forEach(k => k.addEventListener('click', () => {
+    const g = k.dataset.g, v = k.dataset.v;
+    if (selected[g] === v) {
+      // deselect
+      selected[g] = null;
+      k.classList.remove('on');
+    } else {
+      // deselect others in same group
+      document.querySelectorAll(`.kw[data-g="${g}"]`).forEach(x => x.classList.remove('on'));
+      selected[g] = v;
+      k.classList.add('on');
+    }
+    updateSelDisplay();
+  }));
 
-  // DEMO QUICK
-  $('btn-demo').addEventListener('click',()=>{
-    captured = DEMO_PH;
-    // draw placeholder
-    const c=document.createElement('canvas'); c.width=500; c.height=400;
-    const ctx=c.getContext('2d');
-    ctx.fillStyle='#1c1810'; ctx.fillRect(0,0,500,400);
-    ctx.font='160px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('🥐',250,175);
-    ctx.fillStyle='rgba(200,134,10,.9)'; ctx.font='bold 24px sans-serif';
-    ctx.fillText('DEMO · premi Analizza ›',250,320);
-    const ci=$('cap-img'); ci.src=c.toDataURL(); ci.style.display='block';
-    $('vid').style.display='none'; $('cam-frame').style.display='none';
-    $('cam-msg').style.display='none'; $('cam-err').style.display='none';
-    $('bar-shutter').style.display='none'; $('bar-act').style.display='flex';
-    stopCam();
-  });
+  $('free-txt').addEventListener('input', updateSelDisplay);
+
+  // CLASSIFY
+  $('btn-classifica').addEventListener('click', classify);
 
   // RESULT
   $('btn-res-save').addEventListener('click', saveResult);
-  $('btn-res-cancel').addEventListener('click',()=>{
-    $('result-panel').classList.remove('on'); showView('cam'); startCam();
+  $('btn-res-cancel').addEventListener('click', () => {
+    $('result-panel').classList.remove('on');
   });
-  document.querySelectorAll('#stars .star').forEach(s=>
-    s.addEventListener('click',()=>setStars(+s.dataset.r)));
+  document.querySelectorAll('#stars .star').forEach(s =>
+    s.addEventListener('click', () => setStars(+s.dataset.r)));
 
   // DETAIL
-  $('btn-det-back').addEventListener('click',()=>$('det-panel').classList.remove('on'));
-  $('btn-det-del').addEventListener('click', async()=>{
-    if(!detId||!confirm('Eliminare questo croissant?')) return;
-    await DB.del(detId); $('det-panel').classList.remove('on');
-    await loadGallery(); toast('Eliminato');
+  $('btn-det-back').addEventListener('click', () => $('det-panel').classList.remove('on'));
+  $('btn-det-del').addEventListener('click', async () => {
+    if (!detId || !confirm('Eliminare questo croissant?')) return;
+    await DB.del(detId);
+    $('det-panel').classList.remove('on');
+    await loadGallery();
+    toast('Eliminato');
   });
 
   // SETTINGS
   $('key-inp').value = S.key;
   $('model-sel').value = S.model;
-  $('btn-save-key').addEventListener('click',()=>{
-    S.key=$('key-inp').value.trim(); S.model=$('model-sel').value;
-    toast('Salvato ✓','ok');
+  $('btn-save-key').addEventListener('click', () => {
+    S.key = $('key-inp').value.trim();
+    S.model = $('model-sel').value;
+    toast('Salvato ✓', 'ok');
   });
-  $('model-sel').addEventListener('change',e=>S.model=e.target.value);
-  $('btn-export').addEventListener('click',()=>{
-    const d=items.map(i=>({id:i.id,name:i.name,category:i.category,rating:i.rating,notes:i.notes,analysis:i.analysis,date:i.date}));
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
-    a.download=`croissant-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  $('model-sel').addEventListener('change', e => S.model = e.target.value);
+  $('btn-export').addEventListener('click', () => {
+    const d = items.map(i=>({id:i.id,name:i.name,category:i.category,
+      rating:i.rating,notes:i.notes,keywords:i.keywords,analysis:i.analysis,date:i.date}));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
+    a.download = `croissant-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
   });
-  $('btn-clear').addEventListener('click',async()=>{
-    if(!confirm('Cancellare tutto il catalogo?')) return;
+  $('btn-clear').addEventListener('click', async () => {
+    if (!confirm('Cancellare tutto il catalogo?')) return;
     await DB.clear(); await loadGallery(); toast('Catalogo svuotato');
-  });
-  $('btn-load-all').addEventListener('click', async()=>{
-    const btn=$('btn-load-all'); btn.textContent='⏳ Caricamento…'; btn.disabled=true;
-    for (const d of DEMOS) { await addDemoItem(d, true); await new Promise(r=>setTimeout(r,60)); }
-    await loadGallery(); toast('6 croissant demo aggiunti 🥐','ok');
-    btn.textContent='📦 Popola catalogo con 6 esempi'; btn.disabled=false;
-    showView('gallery');
-  });
-  $('btn-load-one').addEventListener('click', async()=>{
-    const d=DEMOS[di%DEMOS.length]; di++;
-    await addDemoItem(d,false); await loadGallery();
-    toast(`"${d.nome}" aggiunto`,'ok'); showView('gallery');
   });
 
   // SEARCH
-  $('search').addEventListener('input',e=>{ search=e.target.value; render(); });
+  $('search').addEventListener('input', e => { search = e.target.value; renderGallery(); });
 
   // SW
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
