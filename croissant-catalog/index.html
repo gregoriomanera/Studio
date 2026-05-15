@@ -1,1566 +1,921 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <meta name="theme-color" content="#c8860a"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>Croissant Catalog</title>
-  <link rel="manifest" href="manifest.json"/>
-  <link rel="icon" href="icon.svg"/>
-  <style>
-    :root {
-      --bg: #0f0d0a;
-      --surface: #1c1810;
-      --surface2: #2a231a;
-      --border: #3a2e1e;
-      --gold: #c8860a;
-      --gold-light: #e8a020;
-      --gold-dim: #8a5c06;
-      --text: #f0e8d8;
-      --text-dim: #9a8870;
-      --danger: #c0392b;
-      --success: #27ae60;
-      --radius: 16px;
-      --radius-sm: 10px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100dvh;
-      overflow-x: hidden;
-    }
-
-    /* ── LAYOUT ── */
-    #app { display: flex; flex-direction: column; min-height: 100dvh; }
-
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(15,13,10,.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: env(safe-area-inset-top) 16px 0;
-    }
-
-    .header-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 56px;
-    }
-
-    .logo { font-size: 22px; font-weight: 700; color: var(--gold); letter-spacing: -.5px; }
-    .logo span { opacity: .6; font-weight: 400; }
-
-    .header-actions { display: flex; gap: 8px; }
-
-    nav {
-      display: flex; gap: 0;
-      border-top: 1px solid var(--border);
-    }
-
-    nav button {
-      flex: 1; background: none; border: none; color: var(--text-dim);
-      padding: 8px 4px 10px;
-      font-size: 11px; font-weight: 500;
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      cursor: pointer; transition: color .15s;
-    }
-
-    nav button.active { color: var(--gold); }
-    nav button .nav-icon { font-size: 20px; }
-
-    main { flex: 1; overflow-y: auto; }
-
-    /* ── VIEWS ── */
-    .view { display: none; padding: 16px; padding-bottom: 24px; }
-    .view.active { display: block; }
-
-    /* ── GALLERY ── */
-    .gallery-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .gallery-title { font-size: 13px; color: var(--text-dim); }
-    .gallery-count { font-weight: 700; color: var(--gold); font-size: 18px; }
-
-    .search-bar {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 10px 14px;
-      color: var(--text); font-size: 15px; width: 100%;
-      margin-bottom: 16px; outline: none;
-    }
-
-    .search-bar::placeholder { color: var(--text-dim); }
-    .search-bar:focus { border-color: var(--gold-dim); }
-
-    .filter-chips {
-      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px;
-      scrollbar-width: none; margin-bottom: 16px;
-    }
-
-    .filter-chips::-webkit-scrollbar { display: none; }
-
-    .chip {
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--text-dim); border-radius: 20px;
-      padding: 6px 14px; font-size: 13px; white-space: nowrap;
-      cursor: pointer; transition: all .15s; user-select: none;
-    }
-
-    .chip.active {
-      background: var(--gold); border-color: var(--gold);
-      color: #000; font-weight: 600;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
-    }
-
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-      cursor: pointer; transition: transform .15s, border-color .15s;
-      animation: fadeIn .3s ease;
-    }
-
-    .card:active { transform: scale(.97); }
-    .card:hover { border-color: var(--gold-dim); }
-
-    .card-img {
-      width: 100%; aspect-ratio: 1;
-      object-fit: cover; display: block;
-      background: var(--surface2);
-    }
-
-    .card-body { padding: 10px; }
-
-    .card-name {
-      font-size: 13px; font-weight: 600;
-      color: var(--text); margin-bottom: 4px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    .card-meta { font-size: 11px; color: var(--text-dim); }
-
-    .badge {
-      display: inline-block; background: var(--surface2);
-      border: 1px solid var(--border); border-radius: 6px;
-      padding: 2px 7px; font-size: 11px; color: var(--text-dim);
-      margin-top: 4px;
-    }
-
-    .empty-state {
-      text-align: center; padding: 60px 24px;
-      color: var(--text-dim);
-    }
-
-    .empty-icon { font-size: 64px; margin-bottom: 16px; display: block; }
-    .empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-    .empty-desc { font-size: 14px; line-height: 1.5; }
-
-    /* ── CAMERA VIEW ── */
-    #view-camera { padding: 0; }
-
-    .camera-container {
-      position: relative; width: 100%; background: #000;
-      min-height: 60vw; display: flex; align-items: center; justify-content: center;
-    }
-
-    #preview {
-      width: 100%; max-height: 70dvh;
-      object-fit: cover; display: block;
-    }
-
-    .camera-overlay {
-      position: absolute; inset: 0; pointer-events: none;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .viewfinder {
-      width: 70%; aspect-ratio: 1;
-      border: 2px solid rgba(200,134,10,.7);
-      border-radius: 16px;
-      box-shadow: 0 0 0 9999px rgba(0,0,0,.3);
-    }
-
-    .camera-hint {
-      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,.7); color: #fff; font-size: 12px;
-      padding: 6px 14px; border-radius: 20px; white-space: nowrap;
-      pointer-events: none;
-    }
-
-    #captured-preview {
-      width: 100%; max-height: 70dvh; object-fit: cover;
-      display: none; border-bottom: 1px solid var(--border);
-    }
-
-    .camera-actions {
-      display: flex; gap: 12px; padding: 20px 16px;
-      justify-content: center; align-items: center;
-    }
-
-    .btn-shutter {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: var(--gold); border: 4px solid var(--gold-light);
-      cursor: pointer; transition: transform .1s;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-    }
-
-    .btn-shutter:active { transform: scale(.9); }
-
-    .btn-shutter.loading {
-      animation: pulse 1s infinite;
-    }
-
-    #btn-upload {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--surface2); border: 1px solid var(--border);
-      cursor: pointer; font-size: 20px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-dim); transition: all .15s;
-    }
-
-    #btn-upload:hover { border-color: var(--gold-dim); color: var(--text); }
-
-    #btn-flip {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--surface2); border: 1px solid var(--border);
-      cursor: pointer; font-size: 20px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-dim); transition: all .15s;
-    }
-
-    #btn-flip:hover { border-color: var(--gold-dim); color: var(--text); }
-
-    .captured-actions {
-      display: none; gap: 12px; padding: 16px;
-    }
-
-    /* ── ANALYSIS OVERLAY ── */
-    .analysis-overlay {
-      position: fixed; inset: 0; z-index: 200;
-      background: rgba(15,13,10,.97);
-      display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 32px;
-      text-align: center;
-    }
-
-    .analysis-overlay.active { display: flex; }
-
-    .spinner {
-      width: 56px; height: 56px;
-      border: 3px solid var(--border);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 24px;
-    }
-
-    .analysis-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-    .analysis-sub { color: var(--text-dim); font-size: 14px; }
-
-    /* ── RESULT PANEL ── */
-    .result-panel {
-      position: fixed; inset: 0; z-index: 200;
-      background: var(--bg);
-      display: none; flex-direction: column;
-      overflow-y: auto;
-    }
-
-    .result-panel.active { display: flex; }
-
-    .result-photo {
-      width: 100%; max-height: 40dvh; object-fit: cover;
-      display: block; flex-shrink: 0;
-    }
-
-    .result-body {
-      padding: 20px 16px 32px;
-      flex: 1;
-    }
-
-    .ai-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(200,134,10,.15); border: 1px solid var(--gold-dim);
-      color: var(--gold); border-radius: 20px;
-      padding: 4px 12px; font-size: 12px; font-weight: 600;
-      margin-bottom: 16px;
-    }
-
-    .result-name-input {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 12px 14px;
-      color: var(--text); font-size: 18px; font-weight: 700;
-      outline: none; margin-bottom: 16px;
-    }
-
-    .result-name-input:focus { border-color: var(--gold-dim); }
-
-    .field-group { margin-bottom: 20px; }
-    .field-label { font-size: 11px; color: var(--text-dim); font-weight: 600;
-      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
-
-    .field-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    .field-chip {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: 6px 12px; font-size: 13px;
-      color: var(--text-dim); cursor: pointer; transition: all .15s;
-    }
-
-    .field-chip.selected {
-      background: rgba(200,134,10,.15); border-color: var(--gold);
-      color: var(--gold); font-weight: 600;
-    }
-
-    .field-input {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 10px 14px;
-      color: var(--text); font-size: 14px; outline: none; resize: none;
-    }
-
-    .field-input:focus { border-color: var(--gold-dim); }
-
-    .info-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .info-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 12px;
-    }
-
-    .info-card-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase;
-      letter-spacing: .5px; margin-bottom: 4px; }
-    .info-card-value { font-size: 14px; font-weight: 600; }
-
-    .rating-row {
-      display: flex; gap: 8px; margin-bottom: 20px;
-    }
-
-    .star {
-      font-size: 28px; cursor: pointer; transition: transform .1s;
-      opacity: .3; filter: grayscale(1);
-    }
-
-    .star.active { opacity: 1; filter: none; transform: scale(1.1); }
-    .star:hover { transform: scale(1.2); }
-
-    /* ── DETAIL VIEW ── */
-    .detail-panel {
-      position: fixed; inset: 0; z-index: 200;
-      background: var(--bg);
-      display: none; flex-direction: column;
-      overflow-y: auto;
-    }
-
-    .detail-panel.active { display: flex; }
-
-    .detail-photo {
-      width: 100%; max-height: 45dvh; object-fit: cover; flex-shrink: 0;
-      position: relative;
-    }
-
-    .detail-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .detail-back {
-      position: absolute; top: 16px; left: 16px;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(0,0,0,.6); border: none;
-      color: #fff; font-size: 20px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(8px);
-    }
-
-    .detail-delete {
-      position: absolute; top: 16px; right: 16px;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(192,57,43,.7); border: none;
-      color: #fff; font-size: 18px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(8px);
-    }
-
-    .detail-body { padding: 20px 16px 40px; }
-
-    .detail-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .detail-date { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
-
-    .detail-stars { display: flex; gap: 4px; margin-bottom: 16px; }
-    .detail-star { font-size: 20px; opacity: .25; }
-    .detail-star.active { opacity: 1; }
-
-    .detail-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
-    }
-
-    .detail-notes {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 14px;
-      font-size: 14px; color: var(--text-dim); line-height: 1.6;
-    }
-
-    .detail-notes p { color: var(--text); }
-
-    /* ── SETTINGS ── */
-    #view-settings {}
-
-    .settings-section { margin-bottom: 28px; }
-    .settings-title { font-size: 11px; color: var(--gold); font-weight: 700;
-      text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
-
-    .settings-row {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; margin-bottom: 2px;
-    }
-
-    .settings-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px; border-bottom: 1px solid var(--border);
-      font-size: 15px;
-    }
-
-    .settings-item:last-child { border-bottom: none; }
-
-    .settings-item-label { color: var(--text); }
-    .settings-item-value { color: var(--text-dim); font-size: 14px; }
-
-    .settings-key-input {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 14px 16px;
-      color: var(--text); font-size: 14px; outline: none;
-      font-family: monospace; letter-spacing: .5px;
-    }
-
-    .settings-key-input:focus { border-color: var(--gold-dim); }
-
-    .settings-key-hint {
-      font-size: 12px; color: var(--text-dim); margin-top: 8px; line-height: 1.5;
-    }
-
-    .model-select {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 14px 16px;
-      color: var(--text); font-size: 14px; outline: none;
-      -webkit-appearance: none; cursor: pointer;
-    }
-
-    .model-select option { background: var(--bg); }
-
-    .stats-row {
-      display: flex; gap: 10px;
-    }
-
-    .stat-card {
-      flex: 1; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 16px; text-align: center;
-    }
-
-    .stat-value { font-size: 28px; font-weight: 700; color: var(--gold); }
-    .stat-label { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
-
-    /* ── BUTTONS ── */
-    .btn {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      border: none; border-radius: var(--radius-sm);
-      padding: 14px 20px; font-size: 15px; font-weight: 600;
-      cursor: pointer; transition: all .15s; user-select: none;
-    }
-
-    .btn:active { transform: scale(.97); }
-
-    .btn-primary { background: var(--gold); color: #000; flex: 1; }
-    .btn-primary:hover { background: var(--gold-light); }
-
-    .btn-secondary {
-      background: var(--surface2); color: var(--text);
-      border: 1px solid var(--border); flex: 1;
-    }
-
-    .btn-secondary:hover { border-color: var(--gold-dim); }
-
-    .btn-danger { background: var(--danger); color: #fff; }
-    .btn-icon {
-      width: 44px; height: 44px; padding: 0; border-radius: var(--radius-sm);
-      background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim);
-      font-size: 18px;
-    }
-
-    .full-width { width: 100%; }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--text); padding: 12px 20px; border-radius: 24px;
-      font-size: 14px; z-index: 999;
-      animation: slideUp .3s ease, fadeOut .3s ease 2.7s forwards;
-      white-space: nowrap; box-shadow: 0 4px 24px rgba(0,0,0,.5);
-    }
-
-    .toast.success { border-color: var(--success); color: var(--success); }
-    .toast.error { border-color: var(--danger); color: var(--danger); }
-
-    /* ── ANIMATIONS ── */
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(.95); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%); } }
-    @keyframes fadeOut { to { opacity: 0; } }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-    /* ── HIDDEN UPLOAD ── */
-    #file-input { display: none; }
-
-    /* ── RESPONSIVE ── */
-    @media (min-width: 480px) {
-      .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
-    }
-
-    @media (min-width: 768px) {
-      .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#c8860a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>🥐 Croissant Catalog</title>
+<link rel="manifest" href="manifest.json"/>
+<style>
+:root {
+  --bg:#0f0d0a; --surf:#1c1810; --surf2:#241e14; --border:#3a2e1e;
+  --gold:#c8860a; --gold2:#e8a020; --golddim:#8a5c06;
+  --text:#f0e8d8; --dim:#9a8870; --danger:#c0392b; --ok:#27ae60;
+  --r:14px; --rs:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+header{
+  flex-shrink:0;
+  background:rgba(15,13,10,.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding-top:env(safe-area-inset-top);
+}
+.hrow{display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 16px}
+.logo{font-size:20px;font-weight:700;color:var(--gold);letter-spacing:-.4px}
+.logo small{font-weight:400;opacity:.6}
+nav{display:flex}
+nav button{
+  flex:1;background:none;border:none;color:var(--dim);
+  padding:7px 4px 9px;font-size:11px;font-weight:500;
+  display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+  transition:color .15s;border-top:2px solid transparent;
+}
+nav button.on{color:var(--gold);border-top-color:var(--gold)}
+nav button .ic{font-size:19px}
+
+/* ── MAIN SCROLL AREA ── */
+main{flex:1;overflow:hidden;position:relative}
+.view{position:absolute;inset:0;overflow-y:auto;padding:16px;display:none}
+.view.on{display:block}
+#vcam{padding:0;display:none;flex-direction:column}
+#vcam.on{display:flex}
+
+/* ── GALLERY ── */
+.g-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.g-count{font-size:28px;font-weight:700;color:var(--gold);line-height:1}
+.g-label{font-size:12px;color:var(--dim)}
+input.search{
+  width:100%;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:10px 14px;color:var(--text);font-size:15px;
+  outline:none;margin-bottom:12px;
+}
+input.search:focus{border-color:var(--golddim)}
+input.search::placeholder{color:var(--dim)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;margin-bottom:14px}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  background:var(--surf);border:1px solid var(--border);color:var(--dim);
+  border-radius:20px;padding:5px 13px;font-size:13px;white-space:nowrap;
+  cursor:pointer;transition:all .15s;user-select:none;flex-shrink:0;
+}
+.chip.on{background:var(--gold);border-color:var(--gold);color:#000;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;cursor:pointer;transition:border-color .15s,transform .1s;
+}
+.card:active{transform:scale(.97)}
+.card:hover{border-color:var(--golddim)}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--surf2);display:block}
+.card-b{padding:9px 10px}
+.card-n{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.card-s{font-size:11px;color:var(--dim)}
+.empty{text-align:center;padding:50px 20px;color:var(--dim);grid-column:1/-1}
+.empty .ei{font-size:56px;display:block;margin-bottom:14px}
+.empty h3{color:var(--text);margin-bottom:6px;font-size:17px}
+.empty p{font-size:13px;line-height:1.6}
+
+/* ── CAMERA VIEW ── */
+.cam-box{
+  position:relative;background:#000;overflow:hidden;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  min-height:55vw;max-height:65dvh;
+}
+#vid{width:100%;height:100%;object-fit:cover;display:none}
+#cap-img{width:100%;height:100%;object-fit:cover;display:none}
+.cam-frame{
+  position:absolute;inset:0;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.frame-sq{
+  width:65%;aspect-ratio:1;border:2px solid rgba(200,134,10,.7);
+  border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.3);
+}
+.cam-msg{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.65);color:#fff;font-size:12px;
+  padding:5px 14px;border-radius:20px;white-space:nowrap;pointer-events:none;
+}
+.cam-err{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;padding:24px;text-align:center;min-height:55vw;
+  background:var(--surf);
+}
+.cam-err .eic{font-size:48px}
+.cam-err p{font-size:13px;color:var(--dim);line-height:1.5;max-width:280px}
+
+.bar{display:flex;gap:12px;align-items:center;justify-content:center;padding:18px 16px}
+.bar.hidden{display:none}
+.shutter{
+  width:68px;height:68px;border-radius:50%;background:var(--gold);
+  border:4px solid var(--gold2);cursor:pointer;font-size:26px;
+  display:flex;align-items:center;justify-content:center;transition:transform .1s;
+}
+.shutter:active{transform:scale(.88)}
+.icon-btn{
+  width:46px;height:46px;border-radius:50%;background:var(--surf2);
+  border:1px solid var(--border);font-size:19px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:var(--dim);
+}
+.icon-btn:hover{border-color:var(--golddim);color:var(--text)}
+
+.act-bar{display:none;gap:10px;padding:12px 16px 0}
+
+/* demo strip always visible in camera view */
+.demo-strip{
+  margin:0 16px 16px;background:rgba(200,134,10,.08);
+  border:1px solid rgba(200,134,10,.25);border-radius:var(--rs);
+  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.demo-strip p{font-size:13px;color:var(--dim);line-height:1.4}
+.demo-strip p strong{color:var(--text)}
+.demo-strip button{
+  flex-shrink:0;background:var(--gold);color:#000;border:none;
+  border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;
+}
+
+/* ── OVERLAY: analysis ── */
+.ov{
+  position:fixed;inset:0;z-index:300;background:rgba(10,8,5,.96);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:32px;
+}
+.ov.on{display:flex}
+.spin{width:52px;height:52px;border:3px solid var(--border);border-top-color:var(--gold);
+  border-radius:50%;animation:spin 1s linear infinite;margin-bottom:22px}
+.ov-title{font-size:20px;font-weight:700;margin-bottom:8px}
+.ov-sub{color:var(--dim);font-size:14px}
+
+/* ── RESULT PANEL ── */
+.panel{
+  position:fixed;inset:0;z-index:200;background:var(--bg);
+  display:none;flex-direction:column;overflow-y:auto;
+}
+.panel.on{display:flex}
+.panel-photo{width:100%;max-height:38dvh;object-fit:cover;flex-shrink:0;display:block}
+.panel-body{padding:18px 16px 36px;flex:1}
+.ai-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(200,134,10,.12);border:1px solid var(--golddim);
+  color:var(--gold);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:600;
+  margin-bottom:14px;
+}
+.name-inp{
+  width:100%;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:11px 14px;color:var(--text);
+  font-size:17px;font-weight:700;outline:none;margin-bottom:14px;
+}
+.name-inp:focus{border-color:var(--golddim)}
+.fl{font-size:11px;color:var(--dim);font-weight:600;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:7px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.fchip{
+  background:var(--surf);border:1px solid var(--border);border-radius:8px;
+  padding:6px 12px;font-size:13px;color:var(--dim);cursor:pointer;transition:all .15s;
+}
+.fchip.on{background:rgba(200,134,10,.15);border-color:var(--gold);color:var(--gold);font-weight:600}
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.icard{background:var(--surf);border:1px solid var(--border);border-radius:var(--rs);padding:11px}
+.icard-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.icard-v{font-size:14px;font-weight:600}
+.stars{display:flex;gap:6px;margin-bottom:14px}
+.star{font-size:26px;cursor:pointer;opacity:.25;transition:transform .1s}
+.star.on{opacity:1;transform:scale(1.1)}
+textarea.fi{
+  width:100%;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:10px 14px;color:var(--text);
+  font-size:14px;resize:none;outline:none;font-family:inherit;
+}
+textarea.fi:focus{border-color:var(--golddim)}
+.row2{display:flex;gap:10px;margin-top:14px}
+
+/* ── DETAIL ── */
+.det-photo{position:relative;flex-shrink:0}
+.det-photo img{width:100%;max-height:42dvh;object-fit:cover;display:block}
+.det-back,.det-del{
+  position:absolute;top:14px;width:40px;height:40px;border-radius:50%;
+  border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.det-back{left:14px;background:rgba(0,0,0,.55);color:#fff}
+.det-del{right:14px;background:rgba(192,57,43,.7);color:#fff}
+.det-body{padding:18px 16px 40px}
+.det-title{font-size:22px;font-weight:700;margin-bottom:3px}
+.det-date{font-size:13px;color:var(--dim);margin-bottom:12px}
+.det-stars{display:flex;gap:4px;margin-bottom:14px}
+.det-star{font-size:19px;opacity:.2}
+.det-star.on{opacity:1}
+.det-notes{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:13px;font-size:14px;color:var(--dim);line-height:1.6;
+}
+
+/* ── SETTINGS ── */
+.sec{margin-bottom:26px}
+.sec-t{font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;
+  letter-spacing:.7px;margin-bottom:10px}
+.srow{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.sitem{display:flex;align-items:center;justify-content:space-between;
+  padding:13px 15px;border-bottom:1px solid var(--border);font-size:14px}
+.sitem:last-child{border-bottom:none}
+.sitem-l{color:var(--text)}
+.sitem-v{color:var(--dim);font-size:13px}
+.key-inp{
+  width:100%;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:13px 15px;color:var(--text);font-size:14px;
+  outline:none;font-family:monospace;
+}
+.key-inp:focus{border-color:var(--golddim)}
+.hint{font-size:12px;color:var(--dim);margin-top:7px;line-height:1.5}
+.msel{
+  width:100%;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:13px 15px;color:var(--text);font-size:14px;
+  -webkit-appearance:none;cursor:pointer;outline:none;
+}
+.msel option{background:var(--bg)}
+.stat-row{display:flex;gap:10px}
+.scard{flex:1;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--rs);padding:14px;text-align:center}
+.scard-v{font-size:26px;font-weight:700;color:var(--gold)}
+.scard-l{font-size:11px;color:var(--dim);margin-top:3px}
+.demo-box{
+  background:rgba(200,134,10,.08);border:1px solid rgba(200,134,10,.25);
+  border-radius:var(--r);padding:14px;margin-bottom:10px;
+  font-size:13px;color:var(--dim);line-height:1.6;
+}
+
+/* ── BUTTONS ── */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  border:none;border-radius:var(--rs);padding:13px 18px;
+  font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;
+  user-select:none;font-family:inherit;
+}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--gold);color:#000;flex:1}
+.btn-p:hover{background:var(--gold2)}
+.btn-s{background:var(--surf2);color:var(--text);border:1px solid var(--border);flex:1}
+.btn-s:hover{border-color:var(--golddim)}
+.btn-d{background:var(--danger);color:#fff}
+.fw{width:100%}
+.mb{margin-bottom:8px}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:84px;left:50%;transform:translateX(-50%);
+  background:var(--surf);border:1px solid var(--border);color:var(--text);
+  padding:11px 20px;border-radius:24px;font-size:14px;z-index:999;
+  animation:slideup .3s ease,fadeout .3s ease 2.7s forwards;
+  white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.5);pointer-events:none;
+}
+.toast.ok{border-color:var(--ok);color:var(--ok)}
+.toast.err{border-color:var(--danger);color:var(--danger)}
+
+/* ── ANIMATIONS ── */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideup{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes fadeout{to{opacity:0}}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+#file-inp{display:none}
+</style>
 </head>
 <body>
-<div id="app">
-  <header>
-    <div class="header-inner">
-      <div class="logo">🥐 <span>Croissant</span>Catalog</div>
-      <div class="header-actions">
-        <button class="btn btn-icon" id="btn-header-add" title="Aggiungi" onclick="switchCamera()">📷</button>
-      </div>
+
+<header>
+  <div class="hrow">
+    <div class="logo">🥐 <small>Croissant</small>Catalog</div>
+  </div>
+  <nav>
+    <button class="nav-tab on" data-v="gallery"><span class="ic">🗂️</span>Catalogo</button>
+    <button class="nav-tab" data-v="cam"><span class="ic">📷</span>Scatta</button>
+    <button class="nav-tab" data-v="settings"><span class="ic">⚙️</span>Impostazioni</button>
+  </nav>
+</header>
+
+<main>
+  <!-- GALLERY -->
+  <div class="view on" id="vgallery">
+    <div class="g-head">
+      <div><div class="g-label">catalogati</div><div class="g-count" id="g-count">0</div></div>
     </div>
-    <nav>
-      <button class="nav-tab active" data-view="gallery">
-        <span class="nav-icon">🗂️</span>Catalogo
-      </button>
-      <button class="nav-tab" data-view="camera">
-        <span class="nav-icon">📷</span>Scatta
-      </button>
-      <button class="nav-tab" data-view="settings">
-        <span class="nav-icon">⚙️</span>Impostazioni
-      </button>
-    </nav>
-  </header>
+    <input class="search" id="search" type="search" placeholder="🔍  Cerca…" autocomplete="off"/>
+    <div class="chips" id="chips"><div class="chip on" data-f="tutti">Tutti</div></div>
+    <div class="grid" id="grid"></div>
+  </div>
 
-  <main>
-    <!-- GALLERY -->
-    <div class="view active" id="view-gallery">
-      <div id="demo-banner" style="display:none;background:rgba(200,134,10,.12);border:1px solid rgba(200,134,10,.35);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--gold);cursor:pointer">
-        🎭 <strong>Modalità Demo attiva</strong> — nessuna chiave API. Tocca per impostazioni.
-      </div>
-      <div class="gallery-header">
-        <div>
-          <div class="gallery-title">Croissant catalogati</div>
-          <div class="gallery-count" id="catalog-count">0</div>
-        </div>
-      </div>
-
-      <input class="search-bar" id="search-input" type="search"
-             placeholder="🔍 Cerca per nome o categoria…" autocomplete="off"/>
-
-      <div class="filter-chips" id="filter-chips">
-        <div class="chip active" data-filter="tutti">Tutti</div>
-      </div>
-
-      <div class="grid" id="gallery-grid"></div>
-    </div>
-
-    <!-- CAMERA -->
-    <div class="view" id="view-camera">
-      <div class="camera-container" id="camera-container">
-        <video id="preview" autoplay playsinline muted></video>
-        <img id="captured-preview" alt="Foto acquisita"/>
-        <div class="camera-overlay">
-          <div class="viewfinder" id="viewfinder"></div>
-        </div>
-        <div class="camera-hint" id="camera-hint">Inquadra il croissant</div>
-      </div>
-
-      <div class="camera-actions" id="camera-actions">
-        <button class="btn btn-icon" id="btn-flip" title="Cambia fotocamera">🔄</button>
-        <button class="btn-shutter" id="btn-shutter" title="Scatta foto">📷</button>
-        <button class="btn btn-icon" id="btn-upload" title="Carica foto">🖼️</button>
-      </div>
-
-      <div class="captured-actions" id="captured-actions">
-        <button class="btn btn-secondary" id="btn-retake">↩ Riprova</button>
-        <button class="btn btn-primary" id="btn-analyze">✨ Analizza con AI</button>
-      </div>
-
-      <div style="padding:0 16px 8px;text-align:center">
-        <button class="btn btn-secondary full-width" id="btn-demo-quick" style="font-size:13px;padding:10px">
-          🎭 Demo rapida — simula analisi senza fotocamera
-        </button>
+  <!-- CAMERA -->
+  <div class="view" id="vcam">
+    <!-- camera / preview box -->
+    <div class="cam-box" id="cam-box">
+      <video id="vid" autoplay playsinline muted></video>
+      <img id="cap-img" alt="foto"/>
+      <div class="cam-frame" id="cam-frame"><div class="frame-sq"></div></div>
+      <div class="cam-msg" id="cam-msg">Inquadra il croissant</div>
+      <!-- shown when camera fails -->
+      <div class="cam-err" id="cam-err">
+        <span class="eic">📷</span>
+        <p>Fotocamera non disponibile.<br>Usa <strong>🎭 Demo</strong> qui sotto o carica una foto dalla galleria.</p>
       </div>
     </div>
 
-    <!-- SETTINGS -->
-    <div class="view" id="view-settings">
-      <div class="settings-section">
-        <div class="settings-title">Statistiche</div>
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-value" id="stat-total">0</div>
-            <div class="stat-label">Totale</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="stat-categories">0</div>
-            <div class="stat-label">Categorie</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="stat-rating">–</div>
-            <div class="stat-label">Voto medio</div>
-          </div>
-        </div>
-      </div>
+    <!-- shutter bar (visible when streaming) -->
+    <div class="bar" id="bar-shutter">
+      <button class="icon-btn" id="btn-flip" title="Cambia fotocamera">🔄</button>
+      <button class="shutter" id="btn-shutter">📷</button>
+      <label class="icon-btn" title="Carica foto">🖼️<input type="file" id="file-inp" accept="image/*" hidden/></label>
+    </div>
 
-      <div class="settings-section" id="demo-section">
-        <div class="settings-title" style="color:#e8a020">🎭 Modalità Demo</div>
-        <div style="background:rgba(200,134,10,.1);border:1px solid rgba(200,134,10,.3);border-radius:12px;padding:14px;margin-bottom:12px;font-size:13px;color:var(--text-dim);line-height:1.6">
-          Senza chiave API l'app usa dati simulati.<br>
-          Puoi esplorare tutte le funzioni: fotocamera, analisi AI, catalogo, filtri, dettaglio.
-        </div>
-        <button class="btn btn-secondary full-width" id="btn-load-demo" style="margin-bottom:8px">
-          📦 Popola catalogo con 6 esempi
-        </button>
-        <button class="btn btn-secondary full-width" id="btn-demo-one">
-          🥐 Aggiungi 1 croissant demo
-        </button>
-      </div>
+    <!-- action bar after capture -->
+    <div class="act-bar" id="bar-act">
+      <button class="btn btn-s" id="btn-retake">↩ Riprova</button>
+      <button class="btn btn-p" id="btn-analyze">✨ Analizza</button>
+    </div>
 
-      <div class="settings-section">
-        <div class="settings-title">Chiave API Anthropic</div>
-        <input class="settings-key-input" id="api-key-input" type="password"
-               placeholder="sk-ant-api03-…" autocomplete="off"/>
-        <p class="settings-key-hint">
-          La chiave è salvata solo sul tuo dispositivo e non viene mai inviata a server terzi.<br>
-          Ottienila su <strong>console.anthropic.com</strong>
-        </p>
-        <br>
-        <button class="btn btn-primary full-width" id="btn-save-key">Salva chiave API</button>
-      </div>
+    <!-- demo strip — always visible -->
+    <div class="demo-strip">
+      <p><strong>🎭 Modalità Demo</strong><br>Prova senza fotocamera né chiave API</p>
+      <button id="btn-demo">Demo rapida</button>
+    </div>
+  </div>
 
-      <div class="settings-section">
-        <div class="settings-title">Modello AI</div>
-        <select class="model-select" id="model-select">
-          <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (veloce, economico)</option>
-          <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 (bilanciato)</option>
-          <option value="claude-opus-4-7">Claude Opus 4.7 (massima qualità)</option>
-        </select>
-      </div>
-
-      <div class="settings-section">
-        <div class="settings-title">Dati</div>
-        <button class="btn btn-secondary full-width" id="btn-export" style="margin-bottom:10px">
-          📤 Esporta catalogo (JSON)
-        </button>
-        <button class="btn btn-danger full-width" id="btn-clear">
-          🗑️ Cancella tutto il catalogo
-        </button>
+  <!-- SETTINGS -->
+  <div class="view" id="vsettings">
+    <div class="sec">
+      <div class="sec-t">Statistiche</div>
+      <div class="stat-row">
+        <div class="scard"><div class="scard-v" id="st-tot">0</div><div class="scard-l">Totale</div></div>
+        <div class="scard"><div class="scard-v" id="st-cat">0</div><div class="scard-l">Categorie</div></div>
+        <div class="scard"><div class="scard-v" id="st-avg">–</div><div class="scard-l">Voto medio</div></div>
       </div>
     </div>
-  </main>
-</div>
+
+    <div class="sec">
+      <div class="sec-t">🎭 Demo — nessuna API richiesta</div>
+      <div class="demo-box">
+        Senza chiave API l'app funziona in modalità demo: analisi simulata, immagini generate automaticamente.
+        Puoi esplorare tutto il catalogo, filtri, dettaglio, stelle.
+      </div>
+      <button class="btn btn-s fw mb" id="btn-load-all">📦 Popola catalogo con 6 esempi</button>
+      <button class="btn btn-s fw" id="btn-load-one">🥐 Aggiungi 1 croissant demo</button>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Chiave API Anthropic</div>
+      <input class="key-inp" id="key-inp" type="password" placeholder="sk-ant-api03-…" autocomplete="off"/>
+      <p class="hint">Salvata solo sul tuo dispositivo · <strong>console.anthropic.com</strong></p>
+      <br>
+      <button class="btn btn-p fw" id="btn-save-key">Salva chiave</button>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Modello AI</div>
+      <select class="msel" id="model-sel">
+        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — veloce, economico</option>
+        <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 — bilanciato</option>
+        <option value="claude-opus-4-7">Claude Opus 4.7 — massima qualità</option>
+      </select>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Dati</div>
+      <button class="btn btn-s fw mb" id="btn-export">📤 Esporta JSON</button>
+      <button class="btn btn-d fw" id="btn-clear">🗑️ Cancella tutto il catalogo</button>
+    </div>
+  </div>
+</main>
 
 <!-- ANALYSIS OVERLAY -->
-<div class="analysis-overlay" id="analysis-overlay">
-  <div class="spinner"></div>
-  <div class="analysis-title">Analisi in corso…</div>
-  <div class="analysis-sub">Claude sta esaminando il croissant 🥐</div>
+<div class="ov" id="ov">
+  <div class="spin"></div>
+  <div class="ov-title" id="ov-title">Analisi in corso…</div>
+  <div class="ov-sub" id="ov-sub">Un momento…</div>
 </div>
 
 <!-- RESULT PANEL -->
-<div class="result-panel" id="result-panel">
-  <img class="result-photo" id="result-photo" alt="Foto"/>
-  <div class="result-body">
-    <div class="ai-badge">✨ Analizzato con AI</div>
+<div class="panel" id="result-panel">
+  <img class="panel-photo" id="res-photo" alt=""/>
+  <div class="panel-body">
+    <div class="ai-tag">✨ Analizzato con AI</div>
+    <input class="name-inp" id="res-name" type="text" placeholder="Nome del croissant…"/>
 
-    <input class="result-name-input" id="result-name" type="text" placeholder="Nome del croissant…"/>
-
-    <div class="field-group">
-      <div class="field-label">Categoria</div>
-      <div class="field-chips" id="category-chips">
-        <div class="field-chip" data-val="Classico">Classico</div>
-        <div class="field-chip" data-val="Integrale">Integrale</div>
-        <div class="field-chip" data-val="Cioccolato">Cioccolato</div>
-        <div class="field-chip" data-val="Mandorle">Mandorle</div>
-        <div class="field-chip" data-val="Salato">Salato</div>
-        <div class="field-chip" data-val="Frutta">Frutta</div>
-        <div class="field-chip" data-val="Vegano">Vegano</div>
-        <div class="field-chip" data-val="Altro">Altro</div>
-      </div>
+    <div class="fl">Categoria</div>
+    <div class="fchips" id="res-cats">
+      <div class="fchip" data-v="Classico">Classico</div>
+      <div class="fchip" data-v="Integrale">Integrale</div>
+      <div class="fchip" data-v="Cioccolato">Cioccolato</div>
+      <div class="fchip" data-v="Mandorle">Mandorle</div>
+      <div class="fchip" data-v="Salato">Salato</div>
+      <div class="fchip" data-v="Frutta">Frutta</div>
+      <div class="fchip" data-v="Vegano">Vegano</div>
+      <div class="fchip" data-v="Altro">Altro</div>
     </div>
 
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="info-card-label">Farcitura</div>
-        <div class="info-card-value" id="r-farcitura">–</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-label">Cottura</div>
-        <div class="info-card-value" id="r-cottura">–</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-label">Forma</div>
-        <div class="info-card-value" id="r-forma">–</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-label">Sfogliatura</div>
-        <div class="info-card-value" id="r-sfogliatura">–</div>
-      </div>
+    <div class="igrid">
+      <div class="icard"><div class="icard-l">Farcitura</div><div class="icard-v" id="r-far">–</div></div>
+      <div class="icard"><div class="icard-l">Cottura</div><div class="icard-v" id="r-cot">–</div></div>
+      <div class="icard"><div class="icard-l">Forma</div><div class="icard-v" id="r-for">–</div></div>
+      <div class="icard"><div class="icard-l">Sfogliatura</div><div class="icard-v" id="r-sfo">–</div></div>
     </div>
 
-    <div class="field-group">
-      <div class="field-label">Voto personale</div>
-      <div class="rating-row" id="rating-stars">
-        <span class="star" data-r="1">⭐</span>
-        <span class="star" data-r="2">⭐</span>
-        <span class="star" data-r="3">⭐</span>
-        <span class="star" data-r="4">⭐</span>
-        <span class="star" data-r="5">⭐</span>
-      </div>
+    <div class="fl">Voto personale</div>
+    <div class="stars" id="stars">
+      <span class="star" data-r="1">⭐</span><span class="star" data-r="2">⭐</span>
+      <span class="star" data-r="3">⭐</span><span class="star" data-r="4">⭐</span>
+      <span class="star" data-r="5">⭐</span>
     </div>
 
-    <div class="field-group">
-      <div class="field-label">Note aggiuntive</div>
-      <textarea class="field-input" id="result-notes" rows="3"
-                placeholder="Dove l'hai trovato? Cosa ti ha colpito?"></textarea>
-    </div>
+    <div class="fl">Note personali</div>
+    <textarea class="fi mb" id="res-notes" rows="2" placeholder="Dove l'hai trovato? Cosa ti ha colpito?"></textarea>
 
-    <div class="field-group">
-      <div class="field-label">Osservazioni AI</div>
-      <textarea class="field-input" id="result-ai-notes" rows="3" readonly
-                style="opacity:.7"></textarea>
-    </div>
+    <div class="fl">Osservazioni AI</div>
+    <textarea class="fi" id="res-ai" rows="2" readonly style="opacity:.65"></textarea>
 
-    <div style="display:flex;gap:10px;margin-top:8px">
-      <button class="btn btn-secondary" id="btn-result-cancel">Annulla</button>
-      <button class="btn btn-primary" id="btn-result-save">💾 Salva nel catalogo</button>
+    <div class="row2">
+      <button class="btn btn-s" id="btn-res-cancel">Annulla</button>
+      <button class="btn btn-p" id="btn-res-save">💾 Salva</button>
     </div>
   </div>
 </div>
 
 <!-- DETAIL PANEL -->
-<div class="detail-panel" id="detail-panel">
-  <div class="detail-photo" id="detail-photo-wrap">
-    <img id="detail-img" alt="Croissant"/>
-    <button class="detail-back" id="btn-detail-back">←</button>
-    <button class="detail-delete" id="btn-detail-delete">🗑️</button>
+<div class="panel" id="det-panel">
+  <div class="det-photo">
+    <img id="det-img" alt=""/>
+    <button class="det-back" id="btn-det-back">←</button>
+    <button class="det-del" id="btn-det-del">🗑️</button>
   </div>
-  <div class="detail-body">
-    <div class="ai-badge">🥐 Dettaglio</div>
-    <div class="detail-title" id="detail-title"></div>
-    <div class="detail-date" id="detail-date"></div>
-    <div class="detail-stars" id="detail-stars"></div>
-    <div class="detail-grid" id="detail-grid"></div>
-    <div class="detail-notes" id="detail-notes"></div>
+  <div class="det-body">
+    <div class="ai-tag">🥐 Dettaglio</div>
+    <div class="det-title" id="det-title"></div>
+    <div class="det-date" id="det-date"></div>
+    <div class="det-stars" id="det-stars"></div>
+    <div class="igrid" id="det-grid"></div>
+    <div class="det-notes" id="det-notes"></div>
   </div>
 </div>
 
-<!-- hidden file input -->
-<input type="file" id="file-input" accept="image/*" capture="environment"/>
-
 <script>
-// ═══════════════════════════════════════════════════════
-// DB — IndexedDB wrapper
-// ═══════════════════════════════════════════════════════
+// ─── DB ────────────────────────────────────────────────
 const DB = (() => {
-  let db;
-  const NAME = 'CroissantDB', VER = 1, STORE = 'items';
-
-  function open() {
-    return new Promise((res, rej) => {
-      if (db) return res(db);
-      const req = indexedDB.open(NAME, VER);
-      req.onupgradeneeded = e => {
-        const d = e.target.result;
-        if (!d.objectStoreNames.contains(STORE)) {
-          const s = d.createObjectStore(STORE, { keyPath: 'id' });
-          s.createIndex('category', 'category');
-          s.createIndex('date', 'date');
-        }
-      };
-      req.onsuccess = e => { db = e.target.result; res(db); };
-      req.onerror = () => rej(req.error);
-    });
-  }
-
-  async function tx(mode) {
-    const d = await open();
-    return d.transaction(STORE, mode).objectStore(STORE);
-  }
-
+  let _db;
+  const open = () => new Promise((res, rej) => {
+    if (_db) return res(_db);
+    const r = indexedDB.open('CroissantCatalog', 1);
+    r.onupgradeneeded = e => {
+      const s = e.target.result.createObjectStore('items', { keyPath: 'id' });
+      s.createIndex('cat', 'category');
+    };
+    r.onsuccess = e => { _db = e.target.result; res(_db); };
+    r.onerror = () => rej(r.error);
+  });
+  const tx = async m => (await open()).transaction('items', m).objectStore('items');
+  const wrap = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
   return {
-    async getAll() {
-      const s = await tx('readonly');
-      return new Promise((res, rej) => {
-        const r = s.getAll();
-        r.onsuccess = () => res(r.result.sort((a,b) => b.id - a.id));
-        r.onerror = () => rej(r.error);
-      });
-    },
-    async add(item) {
-      const s = await tx('readwrite');
-      return new Promise((res, rej) => {
-        const r = s.add(item);
-        r.onsuccess = () => res(r.result);
-        r.onerror = () => rej(r.error);
-      });
-    },
-    async delete(id) {
-      const s = await tx('readwrite');
-      return new Promise((res, rej) => {
-        const r = s.delete(id);
-        r.onsuccess = () => res();
-        r.onerror = () => rej(r.error);
-      });
-    },
-    async clear() {
-      const s = await tx('readwrite');
-      return new Promise((res, rej) => {
-        const r = s.clear();
-        r.onsuccess = () => res();
-        r.onerror = () => rej(r.error);
-      });
-    }
+    getAll: async () => { const s = await tx('readonly'); return (await wrap(s.getAll())).sort((a,b) => b.id - a.id); },
+    add:    async item => { const s = await tx('readwrite'); return wrap(s.add(item)); },
+    del:    async id   => { const s = await tx('readwrite'); return wrap(s.delete(id)); },
+    clear:  async ()   => { const s = await tx('readwrite'); return wrap(s.clear()); },
   };
 })();
 
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let allItems = [];
-let currentFilter = 'tutti';
-let currentSearch = '';
-let capturedImage = null; // base64
-let capturedBlob = null;
-let currentRating = 0;
-let selectedCategory = '';
-let stream = null;
-let facingMode = 'environment';
-let currentDetailId = null;
-const DEMO_PLACEHOLDER = '__demo__';
+// ─── STATE ─────────────────────────────────────────────
+let items = [], filter = 'tutti', search = '', rating = 0, selCat = '', detId = null;
+let captured = null, stream = null, facing = 'environment';
+const DEMO_PH = '__demo__';
 
-// ═══════════════════════════════════════════════════════
-// SETTINGS
-// ═══════════════════════════════════════════════════════
-const Settings = {
-  get apiKey() { return localStorage.getItem('cc_api_key') || ''; },
-  set apiKey(v) { localStorage.setItem('cc_api_key', v); },
+// ─── SETTINGS ──────────────────────────────────────────
+const S = {
+  get key()   { return localStorage.getItem('cc_key') || ''; },
+  set key(v)  { localStorage.setItem('cc_key', v); },
   get model() { return localStorage.getItem('cc_model') || 'claude-sonnet-4-6'; },
-  set model(v) { localStorage.setItem('cc_model', v); }
+  set model(v){ localStorage.setItem('cc_model', v); },
 };
 
-// ═══════════════════════════════════════════════════════
-// DEMO DATA
-// ═══════════════════════════════════════════════════════
-const DEMO_RESPONSES = [
-  { nome: 'Croissant al burro classico', categoria: 'Classico', farcitura: 'Nessuna',
-    cottura: 'Dorata', forma: 'A mezzaluna', sfogliatura: 'Molto sfogliato',
-    note: 'Sfogliatura fine e regolare, colore ambrato uniforme, profumo burroso' },
-  { nome: 'Croissant al cioccolato fondente', categoria: 'Cioccolato', farcitura: 'Crema al cioccolato 70%',
-    cottura: 'Dorata', forma: 'Rettangolare', sfogliatura: 'Sfogliato',
-    note: 'Farcitura abbondante, punta leggermente bruciacchiata, ganache visibile' },
-  { nome: 'Croissant alle mandorle', categoria: 'Mandorle', farcitura: 'Frangipane alle mandorle',
-    cottura: 'Scura', forma: 'A mezzaluna', sfogliatura: 'Compatto',
-    note: 'Granella di mandorle in superficie, zucchero a velo, cottura intensa' },
-  { nome: 'Croissant prosciutto e brie', categoria: 'Salato', farcitura: 'Prosciutto cotto + brie',
-    cottura: 'Dorata', forma: 'Dritta', sfogliatura: 'Sfogliato',
-    note: 'Formaggio fuso visibile ai lati, impasto leggermente salato' },
-  { nome: 'Croissant integrale ai semi', categoria: 'Integrale', farcitura: 'Nessuna',
-    cottura: 'Scura', forma: 'A mezzaluna', sfogliatura: 'Molto sfogliato',
-    note: 'Semi di sesamo e girasole in superficie, colore brunito, aroma tostato' },
-  { nome: 'Croissant alla fragola', categoria: 'Frutta', farcitura: 'Confettura di fragole artigianale',
-    cottura: 'Chiara', forma: 'A mezzaluna', sfogliatura: 'Sfogliato',
-    note: 'Farcitura rossastra visibile all\'apertura, glassa lucida in superficie' },
+// ─── DEMO DATA ─────────────────────────────────────────
+const DEMOS = [
+  { nome:'Croissant al burro classico', categoria:'Classico', farcitura:'Nessuna',
+    cottura:'Dorata', forma:'A mezzaluna', sfogliatura:'Molto sfogliato',
+    note:'Sfogliatura fine e regolare, colore ambrato uniforme' },
+  { nome:'Croissant al cioccolato fondente', categoria:'Cioccolato', farcitura:'Crema fondente 70%',
+    cottura:'Dorata', forma:'Rettangolare', sfogliatura:'Sfogliato',
+    note:'Farcitura abbondante, ganache visibile ai lati' },
+  { nome:'Croissant alle mandorle', categoria:'Mandorle', farcitura:'Frangipane alle mandorle',
+    cottura:'Scura', forma:'A mezzaluna', sfogliatura:'Compatto',
+    note:'Granella di mandorle in superficie, zucchero a velo' },
+  { nome:'Croissant prosciutto e brie', categoria:'Salato', farcitura:'Prosciutto cotto + brie',
+    cottura:'Dorata', forma:'Dritta', sfogliatura:'Sfogliato',
+    note:'Formaggio fuso visibile ai bordi, impasto leggermente salato' },
+  { nome:'Croissant integrale ai semi', categoria:'Integrale', farcitura:'Nessuna',
+    cottura:'Scura', forma:'A mezzaluna', sfogliatura:'Molto sfogliato',
+    note:'Semi di sesamo in superficie, aroma tostato intenso' },
+  { nome:'Croissant alla fragola', categoria:'Frutta', farcitura:'Confettura di fragole artigianale',
+    cottura:'Chiara', forma:'A mezzaluna', sfogliatura:'Sfogliato',
+    note:'Glassa lucida in superficie, farcitura rosa visibile' },
 ];
+let di = 0;
 
-let demoIndex = 0;
-
-function makeDemoImage(analysis) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 800; canvas.height = 800;
-  const ctx = canvas.getContext('2d');
-
-  // background gradient
-  const colors = {
-    'Classico':    ['#c8860a','#8a5c06'],
-    'Cioccolato':  ['#5c3317','#3b1f0a'],
-    'Mandorle':    ['#b8860b','#7a5a00'],
-    'Salato':      ['#6b8e5e','#3e5c35'],
-    'Integrale':   ['#8b7355','#5c4a2a'],
-    'Frutta':      ['#c0392b','#8e1b12'],
-    'Vegano':      ['#5f9e6e','#2e6b45'],
-    'Altro':       ['#888','#555'],
-  };
-  const [c1, c2] = colors[analysis.categoria] || colors['Altro'];
-  const grad = ctx.createRadialGradient(400, 380, 60, 400, 400, 440);
-  grad.addColorStop(0, c1);
-  grad.addColorStop(1, c2);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 800, 800);
-
-  // noise texture
-  for (let i = 0; i < 4000; i++) {
-    ctx.fillStyle = `rgba(255,255,255,${Math.random() * .04})`;
-    ctx.fillRect(Math.random()*800, Math.random()*800, 2, 2);
+function makeDemoImg(d) {
+  const C = document.createElement('canvas');
+  C.width = C.height = 600;
+  const ctx = C.getContext('2d');
+  const pal = { Classico:['#c8860a','#7a5000'], Cioccolato:['#5c3317','#2e1508'],
+    Mandorle:['#b8860b','#6a4e00'], Salato:['#6b8e5e','#3a5c32'],
+    Integrale:['#8b7355','#4a3818'], Frutta:['#c0392b','#7a1810'],
+    Vegano:['#5f9e6e','#2e6b45'], Altro:['#666','#444'] };
+  const [c1,c2] = pal[d.categoria] || pal.Altro;
+  const g = ctx.createRadialGradient(300,270,40,300,300,340);
+  g.addColorStop(0,c1); g.addColorStop(1,c2);
+  ctx.fillStyle = g; ctx.fillRect(0,0,600,600);
+  // subtle dots
+  for (let i=0;i<2000;i++) {
+    ctx.fillStyle = `rgba(255,255,255,${Math.random()*.05})`;
+    ctx.fillRect(Math.random()*600,Math.random()*600,2,2);
   }
-
-  // emoji
-  ctx.font = '320px serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('🥐', 400, 380);
-
-  // label
-  ctx.fillStyle = 'rgba(0,0,0,.55)';
-  ctx.fillRect(0, 680, 800, 120);
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 36px -apple-system,sans-serif';
-  ctx.fillText(analysis.nome, 400, 725);
-  ctx.fillStyle = 'rgba(255,255,255,.7)';
-  ctx.font = '28px -apple-system,sans-serif';
-  ctx.fillText(`${analysis.categoria} · ${analysis.cottura}`, 400, 768);
-
-  return canvas.toDataURL('image/jpeg', .88);
+  ctx.font='230px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('🥐',300,270);
+  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(0,500,600,100);
+  ctx.fillStyle='#fff'; ctx.font='bold 28px -apple-system,sans-serif';
+  ctx.fillText(d.nome,300,538);
+  ctx.fillStyle='rgba(255,255,255,.65)'; ctx.font='22px -apple-system,sans-serif';
+  ctx.fillText(`${d.categoria} · ${d.cottura}`,300,574);
+  return C.toDataURL('image/jpeg',.85);
 }
 
-async function simulateAnalysis() {
-  const analysis = DEMO_RESPONSES[demoIndex % DEMO_RESPONSES.length];
-  demoIndex++;
-  await new Promise(r => setTimeout(r, 1400)); // simulate network delay
-  return analysis;
+async function demoAnalyze() {
+  const d = DEMOS[di % DEMOS.length]; di++;
+  await new Promise(r => setTimeout(r,1200));
+  return d;
 }
 
-// ═══════════════════════════════════════════════════════
-// CLAUDE API
-// ═══════════════════════════════════════════════════════
-async function analyzeWithClaude(base64Image) {
-  const key = Settings.apiKey;
-  if (!key) throw new Error('Chiave API mancante. Impostala in Impostazioni.');
-
-  const mediaType = base64Image.startsWith('/9j') ? 'image/jpeg' : 'image/png';
-  const b64 = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
-
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-      'anthropic-dangerous-direct-browser-calls': 'true'
+// ─── CLAUDE API ────────────────────────────────────────
+async function callClaude(b64) {
+  const mt = b64.startsWith('/9j') ? 'image/jpeg' : 'image/png';
+  const data = b64.includes(',') ? b64.split(',')[1] : b64;
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{
+      'x-api-key': S.key,
+      'anthropic-version':'2023-06-01',
+      'content-type':'application/json',
+      'anthropic-dangerous-direct-browser-calls':'true',
     },
     body: JSON.stringify({
-      model: Settings.model,
-      max_tokens: 512,
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'image',
-            source: { type: 'base64', media_type: mediaType, data: b64 }
-          },
-          {
-            type: 'text',
-            text: `Sei un esperto di pasticceria francese e italiana. Analizza questa foto e identifica il croissant.
-
-Rispondi SOLO con un oggetto JSON valido, senza markdown, senza spiegazioni:
-
-{
-  "nome": "nome descrittivo breve (es: Croissant al burro classico)",
-  "categoria": "una di: Classico | Integrale | Cioccolato | Mandorle | Salato | Frutta | Vegano | Altro",
-  "farcitura": "descrizione farcitura visibile o 'Nessuna'",
-  "cottura": "una di: Chiara | Dorata | Scura | Molto scura",
-  "forma": "una di: A mezzaluna | Rettangolare | Dritta | Arrotolata | Altro",
-  "sfogliatura": "una di: Molto sfogliato | Sfogliato | Compatto | Non visibile",
-  "note": "osservazione concisa e specifica su aspetto, texture o caratteristiche notevoli (max 80 caratteri)"
-}
-
-Se l'immagine non mostra un croissant, rispondi: {"errore": "Non sembra un croissant"}`
-          }
-        ]
-      }]
+      model: S.model, max_tokens: 512,
+      messages:[{ role:'user', content:[
+        { type:'image', source:{ type:'base64', media_type:mt, data } },
+        { type:'text', text:`Sei un esperto di pasticceria. Analizza la foto e rispondi SOLO con JSON valido, senza markdown:
+{"nome":"nome breve","categoria":"Classico|Integrale|Cioccolato|Mandorle|Salato|Frutta|Vegano|Altro",
+"farcitura":"descrizione o Nessuna","cottura":"Chiara|Dorata|Scura|Molto scura",
+"forma":"A mezzaluna|Rettangolare|Dritta|Arrotolata|Altro",
+"sfogliatura":"Molto sfogliato|Sfogliato|Compatto|Non visibile",
+"note":"osservazione specifica max 80 caratteri"}
+Se non è un croissant: {"errore":"Non è un croissant"}` }
+      ]}]
     })
   });
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `Errore API: ${resp.status}`);
+  if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message||`Errore ${r.status}`); }
+  const js = await r.json();
+  const txt = js.content[0].text.trim();
+  let parsed;
+  try { parsed = JSON.parse(txt); } catch {
+    const m = txt.match(/\{[\s\S]*\}/);
+    if (m) parsed = JSON.parse(m[0]); else throw new Error('Risposta AI non valida');
   }
+  if (parsed.errore) throw new Error(parsed.errore);
+  return parsed;
+}
 
-  const data = await resp.json();
-  const text = data.content[0].text.trim();
+// ─── IMAGE UTILS ───────────────────────────────────────
+const resize = (b64, w=1024) => new Promise(res => {
+  const img = new Image(); img.onload = () => {
+    const sc = Math.min(1, w/img.width);
+    const c = document.createElement('canvas');
+    c.width = img.width*sc; c.height = img.height*sc;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    res(c.toDataURL('image/jpeg',.85));
+  }; img.src = b64;
+});
+const thumb = (b64, sz=280) => new Promise(res => {
+  const img = new Image(); img.onload = () => {
+    const side = Math.min(img.width,img.height);
+    const c = document.createElement('canvas');
+    c.width = c.height = sz;
+    c.getContext('2d').drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,sz,sz);
+    res(c.toDataURL('image/jpeg',.72));
+  }; img.src = b64;
+});
+
+// ─── CAMERA ────────────────────────────────────────────
+function stopCam() { if (stream) { stream.getTracks().forEach(t=>t.stop()); stream=null; } }
+
+async function startCam() {
+  stopCam();
+  const vid = $('vid'), errDiv = $('cam-err'), frame = $('cam-frame'), msg = $('cam-msg');
+  vid.style.display='none'; $('cap-img').style.display='none';
+  errDiv.style.display='none'; frame.style.display='flex';
+  msg.style.display='block'; $('bar-shutter').style.display='flex';
+  $('bar-act').style.display='none'; captured=null;
 
   try {
-    const parsed = JSON.parse(text);
-    if (parsed.errore) throw new Error(parsed.errore);
-    return parsed;
+    stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:facing, width:{ideal:1280} }, audio:false });
+    vid.srcObject = stream; vid.style.display='block';
   } catch {
-    const match = text.match(/\{[\s\S]*\}/);
-    if (match) return JSON.parse(match[0]);
-    throw new Error('Risposta AI non valida');
+    vid.style.display='none'; frame.style.display='none';
+    msg.style.display='none'; errDiv.style.display='flex';
+    $('bar-shutter').style.display='none';
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// IMAGE UTILS
-// ═══════════════════════════════════════════════════════
-function resizeImage(base64, maxW = 1024) {
-  return new Promise(res => {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, maxW / img.width);
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      res(canvas.toDataURL('image/jpeg', .85));
-    };
-    img.src = base64;
-  });
+function capture() {
+  const vid = $('vid');
+  const c = document.createElement('canvas');
+  c.width = vid.videoWidth; c.height = vid.videoHeight;
+  c.getContext('2d').drawImage(vid,0,0);
+  showCaptured(c.toDataURL('image/jpeg',.9));
 }
 
-function makeThumbnail(base64, size = 300) {
-  return new Promise(res => {
-    const img = new Image();
-    img.onload = () => {
-      const side = Math.min(img.width, img.height);
-      const canvas = document.createElement('canvas');
-      canvas.width = size; canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
-      ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-      res(canvas.toDataURL('image/jpeg', .7));
-    };
-    img.src = base64;
-  });
+function showCaptured(b64) {
+  stopCam();
+  $('vid').style.display='none';
+  $('cap-img').src = b64; $('cap-img').style.display='block';
+  $('cam-frame').style.display='none'; $('cam-msg').style.display='none';
+  $('cam-err').style.display='none';
+  $('bar-shutter').style.display='none';
+  $('bar-act').style.display='flex';
+  captured = b64;
 }
 
-// ═══════════════════════════════════════════════════════
-// CAMERA
-// ═══════════════════════════════════════════════════════
-async function startCamera() {
-  stopCamera();
+// ─── ANALYSIS ──────────────────────────────────────────
+async function analyze() {
+  if (!captured) return;
+  const ov = $('ov'); ov.classList.add('on');
+
   try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode, width: { ideal: 1280 }, height: { ideal: 1280 } },
-      audio: false
-    });
-    const video = document.getElementById('preview');
-    video.srcObject = stream;
-    video.style.display = 'block';
-    document.getElementById('captured-preview').style.display = 'none';
-    document.getElementById('camera-actions').style.display = 'flex';
-    document.getElementById('captured-actions').style.display = 'none';
-    document.getElementById('viewfinder').style.display = 'block';
-    document.getElementById('camera-hint').textContent = 'Inquadra il croissant';
-    capturedImage = null;
+    let analysis;
+    if (!S.key) {
+      $('ov-title').textContent = 'Analisi demo in corso…';
+      $('ov-sub').textContent = '🎭 Dati simulati — nessuna API usata';
+      analysis = await demoAnalyze();
+      if (captured === DEMO_PH) captured = makeDemoImg(analysis);
+    } else {
+      $('ov-title').textContent = 'Analisi AI in corso…';
+      $('ov-sub').textContent = 'Claude esamina il croissant 🥐';
+      analysis = await callClaude(captured);
+    }
+    ov.classList.remove('on');
+    openResult(analysis);
   } catch(e) {
-    if (e.name === 'NotAllowedError')
-      toast('Accesso alla fotocamera negato', 'error');
-    else
-      toast('Fotocamera non disponibile', 'error');
+    ov.classList.remove('on');
+    toast(e.message, 'err');
   }
 }
 
-function stopCamera() {
-  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-}
-
-function capturePhoto() {
-  const video = document.getElementById('preview');
-  const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  capturedImage = canvas.toDataURL('image/jpeg', .9);
-  showCaptured(capturedImage);
-}
-
-function showCaptured(base64) {
-  stopCamera();
-  const video = document.getElementById('preview');
-  const img = document.getElementById('captured-preview');
-  video.style.display = 'none';
-  img.src = base64;
-  img.style.display = 'block';
-  document.getElementById('viewfinder').style.display = 'none';
-  document.getElementById('camera-hint').style.display = 'none';
-  document.getElementById('camera-actions').style.display = 'none';
-  document.getElementById('captured-actions').style.display = 'flex';
-  capturedImage = base64;
-}
-
-// ═══════════════════════════════════════════════════════
-// GALLERY
-// ═══════════════════════════════════════════════════════
-async function loadGallery() {
-  allItems = await DB.getAll();
-  renderGallery();
-  updateFilterChips();
-  updateStats();
-  const banner = document.getElementById('demo-banner');
-  if (banner) banner.style.display = Settings.apiKey ? 'none' : 'block';
-}
-
-function renderGallery() {
-  const grid = document.getElementById('gallery-grid');
-  const search = currentSearch.toLowerCase();
-
-  let items = allItems.filter(it => {
-    const matchFilter = currentFilter === 'tutti' || it.category === currentFilter;
-    const matchSearch = !search ||
-      it.name.toLowerCase().includes(search) ||
-      (it.category || '').toLowerCase().includes(search);
-    return matchFilter && matchSearch;
-  });
-
-  document.getElementById('catalog-count').textContent = items.length;
-
-  if (items.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state" style="grid-column:1/-1">
-        <span class="empty-icon">🥐</span>
-        <div class="empty-title">${allItems.length === 0 ? 'Nessun croissant ancora' : 'Nessun risultato'}</div>
-        <div class="empty-desc">${allItems.length === 0
-          ? 'Scatta una foto per iniziare il catalogo!'
-          : 'Prova con un\'altra ricerca o categoria'}</div>
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = items.map(it => `
-    <div class="card" data-id="${it.id}">
-      <img class="card-img" src="${it.thumbnail || it.photo}" alt="${it.name}" loading="lazy"/>
-      <div class="card-body">
-        <div class="card-name">${it.name}</div>
-        <div class="card-meta">${it.category || ''}</div>
-        <div class="badge">${it.analysis?.cottura || ''}</div>
-        ${it.rating ? `<div style="font-size:12px;margin-top:4px">${'⭐'.repeat(it.rating)}</div>` : ''}
-      </div>
-    </div>`).join('');
-
-  grid.querySelectorAll('.card').forEach(c => {
-    c.addEventListener('click', () => openDetail(+c.dataset.id));
-  });
-}
-
-function updateFilterChips() {
-  const categories = [...new Set(allItems.map(i => i.category).filter(Boolean))];
-  const container = document.getElementById('filter-chips');
-  container.innerHTML = `<div class="chip ${currentFilter==='tutti'?'active':''}" data-filter="tutti">Tutti</div>` +
-    categories.map(c => `<div class="chip ${currentFilter===c?'active':''}" data-filter="${c}">${c}</div>`).join('');
-
-  container.querySelectorAll('.chip').forEach(ch => {
-    ch.addEventListener('click', () => {
-      currentFilter = ch.dataset.filter;
-      container.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
-      ch.classList.add('active');
-      renderGallery();
-    });
-  });
-}
-
-function updateStats() {
-  const total = allItems.length;
-  const cats = new Set(allItems.map(i => i.category).filter(Boolean)).size;
-  const rated = allItems.filter(i => i.rating);
-  const avg = rated.length ? (rated.reduce((s,i) => s+i.rating,0)/rated.length).toFixed(1) : '–';
-
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-categories').textContent = cats;
-  document.getElementById('stat-rating').textContent = avg;
-  document.getElementById('catalog-count').textContent = allItems.length;
-}
-
-// ═══════════════════════════════════════════════════════
-// RESULT PANEL
-// ═══════════════════════════════════════════════════════
-function openResult(analysis) {
-  currentRating = 0;
-  selectedCategory = analysis.categoria || 'Classico';
-
-  document.getElementById('result-photo').src = capturedImage;
-  document.getElementById('result-name').value = analysis.nome || '';
-  document.getElementById('r-farcitura').textContent = analysis.farcitura || '–';
-  document.getElementById('r-cottura').textContent = analysis.cottura || '–';
-  document.getElementById('r-forma').textContent = analysis.forma || '–';
-  document.getElementById('r-sfogliatura').textContent = analysis.sfogliatura || '–';
-  document.getElementById('result-ai-notes').value = analysis.note || '';
-  document.getElementById('result-notes').value = '';
-
-  // category chips
-  document.querySelectorAll('#category-chips .field-chip').forEach(ch => {
-    ch.classList.toggle('selected', ch.dataset.val === selectedCategory);
-    ch.onclick = () => {
-      selectedCategory = ch.dataset.val;
-      document.querySelectorAll('#category-chips .field-chip').forEach(x => x.classList.remove('selected'));
-      ch.classList.add('selected');
+// ─── RESULT PANEL ──────────────────────────────────────
+function openResult(a) {
+  rating=0; selCat = a.categoria||'Classico';
+  $('res-photo').src = captured;
+  $('res-name').value = a.nome||'';
+  $('r-far').textContent = a.farcitura||'–';
+  $('r-cot').textContent = a.cottura||'–';
+  $('r-for').textContent = a.forma||'–';
+  $('r-sfo').textContent = a.sfogliatura||'–';
+  $('res-ai').value = a.note||'';
+  $('res-notes').value = '';
+  setStars(0);
+  document.querySelectorAll('#res-cats .fchip').forEach(c => {
+    c.classList.toggle('on', c.dataset.v === selCat);
+    c.onclick = () => {
+      selCat = c.dataset.v;
+      document.querySelectorAll('#res-cats .fchip').forEach(x=>x.classList.remove('on'));
+      c.classList.add('on');
     };
   });
-
-  // stars
-  setStars(0);
-
-  document.getElementById('result-panel').classList.add('active');
+  $('result-panel').classList.add('on');
 }
 
 function setStars(n) {
-  currentRating = n;
-  document.querySelectorAll('#rating-stars .star').forEach((s, i) => {
-    s.classList.toggle('active', i < n);
-  });
+  rating = n;
+  document.querySelectorAll('#stars .star').forEach((s,i)=>s.classList.toggle('on',i<n));
 }
 
 async function saveResult() {
-  const name = document.getElementById('result-name').value.trim();
-  if (!name) { toast('Inserisci un nome', 'error'); return; }
-
-  const [photo, thumbnail] = await Promise.all([
-    resizeImage(capturedImage, 1024),
-    makeThumbnail(capturedImage, 300)
-  ]);
-
-  const item = {
+  const name = $('res-name').value.trim();
+  if (!name) { toast('Inserisci un nome','err'); return; }
+  const [photo, thumbnail] = await Promise.all([resize(captured,1024), thumb(captured,280)]);
+  await DB.add({
     id: Date.now(),
-    name,
-    category: selectedCategory,
-    photo,
-    thumbnail,
-    rating: currentRating || null,
-    notes: document.getElementById('result-notes').value.trim(),
-    analysis: {
-      farcitura: document.getElementById('r-farcitura').textContent,
-      cottura: document.getElementById('r-cottura').textContent,
-      forma: document.getElementById('r-forma').textContent,
-      sfogliatura: document.getElementById('r-sfogliatura').textContent,
-      note: document.getElementById('result-ai-notes').value
-    },
-    date: new Date().toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
-  };
-
-  await DB.add(item);
-  closeResult();
+    name, category: selCat, photo, thumbnail,
+    rating: rating||null,
+    notes: $('res-notes').value.trim(),
+    analysis: { farcitura:$('r-far').textContent, cottura:$('r-cot').textContent,
+                forma:$('r-for').textContent, sfogliatura:$('r-sfo').textContent,
+                note:$('res-ai').value },
+    date: new Date().toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})
+  });
+  $('result-panel').classList.remove('on');
   await loadGallery();
-  toast('Croissant salvato! 🥐', 'success');
+  toast('Salvato! 🥐','ok');
   showView('gallery');
 }
 
-function closeResult() {
-  document.getElementById('result-panel').classList.remove('active');
-}
-
-// ═══════════════════════════════════════════════════════
-// DETAIL
-// ═══════════════════════════════════════════════════════
+// ─── DETAIL ────────────────────────────────────────────
 function openDetail(id) {
-  const item = allItems.find(i => i.id === id);
-  if (!item) return;
-  currentDetailId = id;
-
-  document.getElementById('detail-img').src = item.photo;
-  document.getElementById('detail-title').textContent = item.name;
-  document.getElementById('detail-date').textContent = item.date || '';
-
-  const stars = document.getElementById('detail-stars');
-  stars.innerHTML = [1,2,3,4,5].map(n =>
-    `<span class="detail-star ${item.rating && n <= item.rating ? 'active' : ''}">⭐</span>`
-  ).join('');
-
-  const a = item.analysis || {};
-  document.getElementById('detail-grid').innerHTML = [
-    ['Categoria', item.category],
-    ['Farcitura', a.farcitura],
-    ['Cottura', a.cottura],
-    ['Forma', a.forma],
-    ['Sfogliatura', a.sfogliatura]
-  ].filter(([,v]) => v && v !== '–').map(([k,v]) => `
-    <div class="info-card">
-      <div class="info-card-label">${k}</div>
-      <div class="info-card-value">${v}</div>
-    </div>`).join('');
-
-  const notes = document.getElementById('detail-notes');
-  const parts = [];
-  if (item.notes) parts.push(`<p>${item.notes}</p>`);
-  if (a.note) parts.push(`<span style="opacity:.6">AI: ${a.note}</span>`);
-  notes.innerHTML = parts.join('<br>') || '<span style="opacity:.4">Nessuna nota</span>';
-
-  document.getElementById('detail-panel').classList.add('active');
+  const it = items.find(i=>i.id===id); if (!it) return;
+  detId = id;
+  $('det-img').src = it.photo;
+  $('det-title').textContent = it.name;
+  $('det-date').textContent = it.date||'';
+  $('det-stars').innerHTML = [1,2,3,4,5].map(n=>
+    `<span class="det-star${it.rating&&n<=it.rating?' on':''}">⭐</span>`).join('');
+  const a = it.analysis||{};
+  $('det-grid').innerHTML = [['Categoria',it.category],['Farcitura',a.farcitura],
+    ['Cottura',a.cottura],['Forma',a.forma],['Sfogliatura',a.sfogliatura]]
+    .filter(([,v])=>v&&v!=='–').map(([k,v])=>
+    `<div class="icard"><div class="icard-l">${k}</div><div class="icard-v">${v}</div></div>`).join('');
+  const parts=[];
+  if (it.notes) parts.push(`<span style="color:var(--text)">${it.notes}</span>`);
+  if (a.note) parts.push(`<span>AI: ${a.note}</span>`);
+  $('det-notes').innerHTML = parts.join('<br>') || '<span style="opacity:.4">Nessuna nota</span>';
+  $('det-panel').classList.add('on');
 }
 
-function closeDetail() {
-  document.getElementById('detail-panel').classList.remove('active');
-  currentDetailId = null;
+// ─── GALLERY ───────────────────────────────────────────
+async function loadGallery() {
+  items = await DB.getAll();
+  render(); updateChips(); updateStats();
 }
 
-async function deleteDetail() {
-  if (!currentDetailId) return;
-  if (!confirm('Eliminare questo croissant dal catalogo?')) return;
-  await DB.delete(currentDetailId);
-  closeDetail();
-  await loadGallery();
-  toast('Eliminato');
+function render() {
+  const q = search.toLowerCase();
+  const list = items.filter(i =>
+    (filter==='tutti'||i.category===filter) &&
+    (!q || i.name.toLowerCase().includes(q) || (i.category||'').toLowerCase().includes(q))
+  );
+  $('g-count').textContent = list.length;
+  $('grid').innerHTML = list.length===0
+    ? `<div class="empty"><span class="ei">${items.length?'🔍':'🥐'}</span>
+       <h3>${items.length?'Nessun risultato':'Nessun croissant ancora'}</h3>
+       <p>${items.length?'Prova con un\'altra ricerca':'Vai in Scatta e premi Demo rapida!'}</p></div>`
+    : list.map(i=>`<div class="card" data-id="${i.id}">
+        <img src="${i.thumbnail||i.photo}" alt="${i.name}" loading="lazy"/>
+        <div class="card-b">
+          <div class="card-n">${i.name}</div>
+          <div class="card-s">${i.category||''}${i.rating?'  '+'⭐'.repeat(i.rating):''}</div>
+        </div></div>`).join('');
+  $('grid').querySelectorAll('.card').forEach(c=>
+    c.addEventListener('click',()=>openDetail(+c.dataset.id)));
 }
 
-// ═══════════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════════
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(`view-${name}`).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(b => {
-    b.classList.toggle('active', b.dataset.view === name);
-  });
-
-  if (name === 'camera') {
-    startCamera();
-    document.getElementById('camera-hint').style.display = 'block';
-  } else {
-    stopCamera();
-  }
-
-  if (name === 'gallery') loadGallery();
-  if (name === 'settings') updateStats();
-}
-
-function switchCamera() { showView('camera'); }
-
-// ═══════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════
-function toast(msg, type = '') {
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3200);
-}
-
-// ═══════════════════════════════════════════════════════
-// EXPORT
-// ═══════════════════════════════════════════════════════
-function exportData() {
-  const data = allItems.map(i => ({
-    id: i.id, name: i.name, category: i.category,
-    rating: i.rating, notes: i.notes, analysis: i.analysis, date: i.date
+function updateChips() {
+  const cats = [...new Set(items.map(i=>i.category).filter(Boolean))];
+  $('chips').innerHTML = `<div class="chip${filter==='tutti'?' on':''}" data-f="tutti">Tutti</div>`+
+    cats.map(c=>`<div class="chip${filter===c?' on':''}" data-f="${c}">${c}</div>`).join('');
+  $('chips').querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+    filter=c.dataset.f;
+    $('chips').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on'); render();
   }));
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `croissant-catalog-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
 }
 
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
+function updateStats() {
+  const rated = items.filter(i=>i.rating);
+  $('st-tot').textContent = items.length;
+  $('st-cat').textContent = new Set(items.map(i=>i.category).filter(Boolean)).size;
+  $('st-avg').textContent = rated.length?(rated.reduce((s,i)=>s+i.rating,0)/rated.length).toFixed(1):'–';
+}
+
+// ─── NAV ───────────────────────────────────────────────
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  $(`v${v}`).classList.add('on');
+  if (v==='cam') startCam(); else stopCam();
+  if (v==='gallery') loadGallery();
+  if (v==='settings') updateStats();
+}
+
+// ─── TOAST ─────────────────────────────────────────────
+function toast(msg, type='') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),3200);
+}
+
+// ─── UTILS ─────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+async function addDemoItem(d, rng=false) {
+  const photo = makeDemoImg(d);
+  const [p,th] = await Promise.all([resize(photo,1024),thumb(photo,280)]);
+  await DB.add({
+    id: Date.now()+Math.random(),
+    name:d.nome, category:d.categoria, photo:p, thumbnail:th,
+    rating: rng ? Math.ceil(Math.random()*2)+3 : null,
+    notes:'',
+    analysis:{ farcitura:d.farcitura, cottura:d.cottura,
+               forma:d.forma, sfogliatura:d.sfogliatura, note:d.note },
+    date: rng
+      ? new Date(Date.now()-Math.random()*30*864e5).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})
+      : new Date().toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})
+  });
+}
+
+// ─── INIT ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+  // NAV
+  document.querySelectorAll('.nav-tab').forEach(b=>
+    b.addEventListener('click',()=>showView(b.dataset.v)));
 
-  // nav tabs
-  document.querySelectorAll('.nav-tab').forEach(btn => {
-    btn.addEventListener('click', () => showView(btn.dataset.view));
+  // CAMERA
+  $('btn-shutter').addEventListener('click', capture);
+  $('btn-flip').addEventListener('click',()=>{ facing=facing==='environment'?'user':'environment'; startCam(); });
+  $('file-inp').addEventListener('change', e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader(); r.onload=ev=>showCaptured(ev.target.result); r.readAsDataURL(f);
+    e.target.value='';
+  });
+  $('btn-retake').addEventListener('click', startCam);
+  $('btn-analyze').addEventListener('click', analyze);
+
+  // DEMO QUICK
+  $('btn-demo').addEventListener('click',()=>{
+    captured = DEMO_PH;
+    // draw placeholder
+    const c=document.createElement('canvas'); c.width=500; c.height=400;
+    const ctx=c.getContext('2d');
+    ctx.fillStyle='#1c1810'; ctx.fillRect(0,0,500,400);
+    ctx.font='160px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('🥐',250,175);
+    ctx.fillStyle='rgba(200,134,10,.9)'; ctx.font='bold 24px sans-serif';
+    ctx.fillText('DEMO · premi Analizza ›',250,320);
+    const ci=$('cap-img'); ci.src=c.toDataURL(); ci.style.display='block';
+    $('vid').style.display='none'; $('cam-frame').style.display='none';
+    $('cam-msg').style.display='none'; $('cam-err').style.display='none';
+    $('bar-shutter').style.display='none'; $('bar-act').style.display='flex';
+    stopCam();
   });
 
-  // camera controls
-  document.getElementById('btn-shutter').addEventListener('click', capturePhoto);
+  // RESULT
+  $('btn-res-save').addEventListener('click', saveResult);
+  $('btn-res-cancel').addEventListener('click',()=>{
+    $('result-panel').classList.remove('on'); showView('cam'); startCam();
+  });
+  document.querySelectorAll('#stars .star').forEach(s=>
+    s.addEventListener('click',()=>setStars(+s.dataset.r)));
 
-  document.getElementById('btn-flip').addEventListener('click', () => {
-    facingMode = facingMode === 'environment' ? 'user' : 'environment';
-    startCamera();
+  // DETAIL
+  $('btn-det-back').addEventListener('click',()=>$('det-panel').classList.remove('on'));
+  $('btn-det-del').addEventListener('click', async()=>{
+    if(!detId||!confirm('Eliminare questo croissant?')) return;
+    await DB.del(detId); $('det-panel').classList.remove('on');
+    await loadGallery(); toast('Eliminato');
   });
 
-  document.getElementById('btn-upload').addEventListener('click', () => {
-    document.getElementById('file-input').click();
+  // SETTINGS
+  $('key-inp').value = S.key;
+  $('model-sel').value = S.model;
+  $('btn-save-key').addEventListener('click',()=>{
+    S.key=$('key-inp').value.trim(); S.model=$('model-sel').value;
+    toast('Salvato ✓','ok');
   });
-
-  document.getElementById('file-input').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => showCaptured(ev.target.result);
-    reader.readAsDataURL(file);
-    e.target.value = '';
+  $('model-sel').addEventListener('change',e=>S.model=e.target.value);
+  $('btn-export').addEventListener('click',()=>{
+    const d=items.map(i=>({id:i.id,name:i.name,category:i.category,rating:i.rating,notes:i.notes,analysis:i.analysis,date:i.date}));
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
+    a.download=`croissant-${new Date().toISOString().slice(0,10)}.json`; a.click();
   });
-
-  document.getElementById('btn-retake').addEventListener('click', startCamera);
-
-  document.getElementById('btn-analyze').addEventListener('click', async () => {
-    if (!capturedImage) return;
-
-    const overlay = document.getElementById('analysis-overlay');
-    overlay.classList.add('active');
-
-    try {
-      let analysis;
-      if (!Settings.apiKey) {
-        // demo mode: simulate AI with mock data
-        overlay.querySelector('.analysis-sub').textContent = '🎭 Modalità Demo — dati simulati';
-        analysis = await simulateAnalysis();
-        // if user used camera/placeholder, replace with styled demo image
-        if (capturedImage === DEMO_PLACEHOLDER) {
-          capturedImage = makeDemoImage(analysis);
-        }
-      } else {
-        overlay.querySelector('.analysis-sub').textContent = 'Claude sta esaminando il croissant 🥐';
-        analysis = await analyzeWithClaude(capturedImage);
-      }
-      overlay.classList.remove('active');
-      openResult(analysis);
-    } catch(e) {
-      overlay.classList.remove('active');
-      toast(e.message, 'error');
-    }
+  $('btn-clear').addEventListener('click',async()=>{
+    if(!confirm('Cancellare tutto il catalogo?')) return;
+    await DB.clear(); await loadGallery(); toast('Catalogo svuotato');
   });
-
-  // result panel
-  document.getElementById('btn-result-save').addEventListener('click', saveResult);
-  document.getElementById('btn-result-cancel').addEventListener('click', () => {
-    closeResult();
-    showView('camera');
-    startCamera();
-  });
-
-  document.querySelectorAll('#rating-stars .star').forEach(s => {
-    s.addEventListener('click', () => setStars(+s.dataset.r));
-  });
-
-  // detail panel
-  document.getElementById('btn-detail-back').addEventListener('click', closeDetail);
-  document.getElementById('btn-detail-delete').addEventListener('click', deleteDetail);
-
-  // settings
-  document.getElementById('api-key-input').value = Settings.apiKey;
-  document.getElementById('model-select').value = Settings.model;
-
-  document.getElementById('btn-save-key').addEventListener('click', () => {
-    Settings.apiKey = document.getElementById('api-key-input').value.trim();
-    Settings.model = document.getElementById('model-select').value;
-    toast('Impostazioni salvate ✓', 'success');
-  });
-
-  document.getElementById('model-select').addEventListener('change', e => {
-    Settings.model = e.target.value;
-  });
-
-  document.getElementById('btn-export').addEventListener('click', exportData);
-
-  document.getElementById('btn-clear').addEventListener('click', async () => {
-    if (!confirm('Eliminare TUTTO il catalogo? Questa azione è irreversibile.')) return;
-    await DB.clear();
-    await loadGallery();
-    toast('Catalogo svuotato');
-  });
-
-  // demo quick button (camera view)
-  document.getElementById('btn-demo-quick').addEventListener('click', () => {
-    capturedImage = DEMO_PLACEHOLDER;
-    // show a placeholder in the preview
-    const img = document.getElementById('captured-preview');
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = 400; tempCanvas.height = 400;
-    const ctx = tempCanvas.getContext('2d');
-    const g = ctx.createLinearGradient(0,0,400,400);
-    g.addColorStop(0,'#2a1f0f'); g.addColorStop(1,'#1a1208');
-    ctx.fillStyle = g; ctx.fillRect(0,0,400,400);
-    ctx.font = '200px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('🥐', 200, 185);
-    ctx.fillStyle = 'rgba(200,134,10,.8)'; ctx.font = 'bold 28px sans-serif';
-    ctx.fillText('DEMO — premi Analizza', 200, 360);
-    img.src = tempCanvas.toDataURL();
-    img.style.display = 'block';
-    document.getElementById('preview').style.display = 'none';
-    document.getElementById('viewfinder').style.display = 'none';
-    document.getElementById('camera-hint').style.display = 'none';
-    document.getElementById('camera-actions').style.display = 'none';
-    document.getElementById('captured-actions').style.display = 'flex';
-    stopCamera();
-  });
-
-  // demo: populate all 6
-  document.getElementById('btn-load-demo').addEventListener('click', async () => {
-    const btn = document.getElementById('btn-load-demo');
-    btn.textContent = '⏳ Caricamento…'; btn.disabled = true;
-    for (const resp of DEMO_RESPONSES) {
-      const photo = makeDemoImage(resp);
-      const [resized, thumb] = await Promise.all([
-        resizeImage(photo, 1024), makeThumbnail(photo, 300)
-      ]);
-      await DB.add({
-        id: Date.now() + Math.random(),
-        name: resp.nome, category: resp.categoria,
-        photo: resized, thumbnail: thumb,
-        rating: Math.ceil(Math.random() * 2) + 3,
-        notes: '',
-        analysis: { farcitura: resp.farcitura, cottura: resp.cottura,
-                    forma: resp.forma, sfogliatura: resp.sfogliatura, note: resp.note },
-        date: new Date(Date.now() - Math.random()*30*864e5)
-              .toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
-      });
-      await new Promise(r => setTimeout(r, 80));
-    }
-    await loadGallery();
-    toast('6 croissant demo aggiunti al catalogo 🥐', 'success');
-    btn.textContent = '📦 Popola catalogo con 6 esempi'; btn.disabled = false;
+  $('btn-load-all').addEventListener('click', async()=>{
+    const btn=$('btn-load-all'); btn.textContent='⏳ Caricamento…'; btn.disabled=true;
+    for (const d of DEMOS) { await addDemoItem(d, true); await new Promise(r=>setTimeout(r,60)); }
+    await loadGallery(); toast('6 croissant demo aggiunti 🥐','ok');
+    btn.textContent='📦 Popola catalogo con 6 esempi'; btn.disabled=false;
     showView('gallery');
   });
-
-  // demo: add single
-  document.getElementById('btn-demo-one').addEventListener('click', async () => {
-    const resp = DEMO_RESPONSES[demoIndex % DEMO_RESPONSES.length];
-    demoIndex++;
-    const photo = makeDemoImage(resp);
-    const [resized, thumb] = await Promise.all([
-      resizeImage(photo, 1024), makeThumbnail(photo, 300)
-    ]);
-    await DB.add({
-      id: Date.now(),
-      name: resp.nome, category: resp.categoria,
-      photo: resized, thumbnail: thumb,
-      rating: null, notes: '',
-      analysis: { farcitura: resp.farcitura, cottura: resp.cottura,
-                  forma: resp.forma, sfogliatura: resp.sfogliatura, note: resp.note },
-      date: new Date().toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' })
-    });
-    await loadGallery();
-    toast(`"${resp.nome}" aggiunto 🥐`, 'success');
-    showView('gallery');
+  $('btn-load-one').addEventListener('click', async()=>{
+    const d=DEMOS[di%DEMOS.length]; di++;
+    await addDemoItem(d,false); await loadGallery();
+    toast(`"${d.nome}" aggiunto`,'ok'); showView('gallery');
   });
 
-  // search
-  document.getElementById('search-input').addEventListener('input', e => {
-    currentSearch = e.target.value;
-    renderGallery();
-  });
+  // SEARCH
+  $('search').addEventListener('input',e=>{ search=e.target.value; render(); });
 
-  // demo banner click
-  const demoBanner = document.getElementById('demo-banner');
-  if (demoBanner) demoBanner.addEventListener('click', () => showView('settings'));
+  // SW
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-  // service worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  }
-
-  // init gallery
   await loadGallery();
 });
 </script>
